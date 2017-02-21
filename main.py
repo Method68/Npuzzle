@@ -82,7 +82,6 @@ def getSequenceInfo (width, gameboard, finalboard):
 			i = 0
 		sys.stdout.write("\033[93m\b%s\033[0m"%syms[i])
 		sys.stdout.flush()
-		time.sleep(.5)
 		i += 1
 		current = heappop(stateTree)
 		for state in getNextStates(width, current[-1]):
