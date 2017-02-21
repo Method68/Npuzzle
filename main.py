@@ -34,17 +34,17 @@ def getNextStates (width, current):
 	if (empty[1] > 0):
 		b = [i.copy () for i in current]
 		b [empty[0]][empty[1]], b[empty[0]][empty[1] - 1] = b[empty[0]][empty[1] - 1], b[empty[0]][empty[1]]
-		nextStates.append (('LEFT', b, (empty[0], empty[1] - 1)))
+		nextStates.append(('LEFT', b, (empty[0], empty[1] - 1)))
 
 	if (empty[0] > 0):
 		c = [i.copy () for i in current]
 		c [empty[0]][empty[1]], c[empty[0] - 1][empty[1]] = c[empty[0] - 1][empty[1]], c[empty[0]][empty [1]]
-		nextStates.append (('UP', c, (empty[0] - 1, empty[1])))
+		nextStates.append(('UP', c, (empty[0] - 1, empty[1])))
 
 	if (empty[0] < (width - 1)):
 		d = [i.copy () for i in current]
 		d [empty[0]][empty[1]], d[empty[0] + 1][empty [1]] = d[empty[0] + 1][empty[1]], d[empty[0]][empty [1]]
-		nextStates.append (('DOWN', d, (empty[0] + 1, empty[1])))
+		nextStates.append(('DOWN', d, (empty[0] + 1, empty[1])))
 	return (nextStates)
 
 def getSequenceInfo (width, gameboard, finalboard):
@@ -87,7 +87,6 @@ def construct(width):
 			k += 1
 		finalboard.append(new)
 
-
 	#Cree un tableau a 2 dimension pour le plateau de jeu
 	gameboard = []
 	k = 0
@@ -98,20 +97,26 @@ def construct(width):
 			k += 1
 		gameboard.append(new)
 
+	#Board with random value
 	print("\n\033[95mGAME BOARD\033[0m")
 	posrow = 0
 	for row in gameboard:
 		print(str(row))
 
+	#Goal board
 	print("\n\033[95mFINAL BOARD\033[0m")
 	for row in finalboard:
 		print(str(row))
 
+	#Call A star, time instentiation 
 	print("\n\033[95mprocessing : \033[0m")
 	time1 = time.time()
 	seqCount, sequence = getSequenceInfo (width, gameboard, finalboard)
+	#Time finished A star
 	time2 = time.time()
-	print("\n\033[91mTime : \033[0m" + str(round(((time2 - time1) / 60), 3)) + "scd")
+
+	#Print time, number of move and all move to accomplite board
+	print("\n\033[91mTime : \033[0m" + str(round(time2 - time1, 3)) + "scd")
 	print("\033[91mNumber of move : \033[0m" + str(seqCount))
 	print('\033[91mAll move : \033[0m\033[92m')
 	print('\n'.join (sequence))
