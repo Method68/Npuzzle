@@ -98,7 +98,6 @@ def construct(width):
 			k += 1
 		gameboard.append(new)
 
-	#Find start position, 0 is start position
 	print("\n\033[95mGAME BOARD\033[0m")
 	posrow = 0
 	for row in gameboard:
