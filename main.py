@@ -1,16 +1,69 @@
-import random
+import random, time, sys
+from heapq import heapify, heappush, heappop
 
-def calculateManhattanDistance(matrix, goal):
-	size  = len(matrix)
-	for i in range(size):
-		for j in range(size):
-			value = matrix[i][j]
-			valuegoal = goal[i][j]
-			if(value != 0):
-				resX = abs(value % size - valuegoal % size)
-				resY = abs(value / size - valuegoal / size)
-				manhattanDistanceSum = resX + resY
-	return manhattanDistanceSum
+def manhattan(width, gameboard, finalboard):
+	result = 0
+	for i in range(width):
+		for j in range(width):
+			if (finalboard[i][j] == 0):
+				continue
+			for l in range(width):
+				for m in range(width):
+					if (finalboard[i][j] == gameboard[l][m]):
+						result += (abs (m - j) + abs (l - i))
+						break
+	return (result)
+
+def getNextStates (width, current):
+	nextStates = []
+	empty = None
+
+	for i in range(width):
+		try:
+			empty = current[i].index(0)
+		except Exception as e:
+			continue
+		empty = (i, empty)
+		break
+
+	if (empty[1] < (width - 1)):
+		a = [i.copy () for i in current]
+		a [empty[0]] [empty[1]], a[empty[0]][empty[1] + 1] = a[empty[0]][empty[1] + 1], a[empty[0]][empty[1]]
+		nextStates.append(('RIGHT', a, (empty[0], empty[1] + 1)))
+
+	if (empty[1] > 0):
+		b = [i.copy () for i in current]
+		b [empty[0]][empty[1]], b[empty[0]][empty[1] - 1] = b[empty[0]][empty[1] - 1], b[empty[0]][empty[1]]
+		nextStates.append (('LEFT', b, (empty[0], empty[1] - 1)))
+
+	if (empty[0] > 0):
+		c = [i.copy () for i in current]
+		c [empty[0]][empty[1]], c[empty[0] - 1][empty[1]] = c[empty[0] - 1][empty[1]], c[empty[0]][empty [1]]
+		nextStates.append (('UP', c, (empty[0] - 1, empty[1])))
+
+	if (empty[0] < (width - 1)):
+		d = [i.copy () for i in current]
+		d [empty[0]][empty[1]], d[empty[0] + 1][empty [1]] = d[empty[0] + 1][empty[1]], d[empty[0]][empty [1]]
+		nextStates.append (('DOWN', d, (empty[0] + 1, empty[1])))
+	return (nextStates)
+
+def getSequenceInfo (width, gameboard, finalboard):
+	current = (manhattan(width, gameboard, finalboard), 0, [], gameboard)
+	stateTree = [current]
+	heapify(stateTree)
+	i = 0
+	while (not current[-1] == finalboard):
+		syms = ['\\', '|', '/', '-']
+		if i == 4:
+			i = 0
+		sys.stdout.write("\033[93m\b%s\033[0m"%syms[i])
+		sys.stdout.flush()
+		time.sleep(.5)
+		i += 1
+		current = heappop(stateTree)
+		for state in getNextStates(width, current[-1]):
+			heappush(stateTree,  (manhattan(width, state[1], finalboard) + current[1] + 1, current[1] + 1, current[2] + [state[0]], state[1]))
+	return (current[1], current[2])
 
 def construct(width):
 	if (width.isdigit() == False):
@@ -46,30 +99,25 @@ def construct(width):
 		gameboard.append(new)
 
 	#Find start position, 0 is start position
-	print("\nGAME BOARD")
+	print("\n\033[95mGAME BOARD\033[0m")
 	posrow = 0
 	for row in gameboard:
-		posZero = 0
-		for elem in row:
-			if elem == 0:
-				startrow = posrow
-				startPos = posZero
-			posZero += 1
-		posrow += 1
 		print(str(row))
 
-	print("\nFINAL BOARD")
+	print("\n\033[95mFINAL BOARD\033[0m")
 	for row in finalboard:
 		print(str(row))
 
-	print("\nRow to start : " + str(startrow))
-	print("Position in row to start : " + str(startPos))
-	print("Value to start : " + str(gameboard[startrow][startPos]))
-
-	toto = calculateManhattanDistance(gameboard, finalboard)
-	print(toto)
+	print("\n\033[95mprocessing : \033[0m")
+	time1 = time.time()
+	seqCount, sequence = getSequenceInfo (width, gameboard, finalboard)
+	time2 = time.time()
+	print("\n\033[91mTime : \033[0m" + str(round(((time2 - time1) / 60), 3)) + "scd")
+	print("\033[91mNumber of move : \033[0m" + str(seqCount))
+	print('\033[91mAll move : \033[0m\033[92m')
+	print('\n'.join (sequence))
 	return
 
 if __name__ == '__main__':
-	width = input('\033[92mChoose width for Npuzzle: \n')
+	width = input('\033[92mChoose size for Npuzzle: \n')
 	construct(width)
