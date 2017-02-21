@@ -1,6 +1,30 @@
 import random, time, sys
 from heapq import heapify, heappush, heappop
 
+def checkIfSolvable(gameboard):
+	gameboardsimplearray = []
+	for elem in gameboard:
+		for value in elem:
+			gameboardsimplearray.append(value)
+	
+	size = len(gameboardsimplearray)
+	i = 0
+	inversion = 0
+	while(i < size):
+		j = i + 1
+		while(j < size):
+			if(gameboardsimplearray[j] != 0 and gameboardsimplearray[i] != 0):
+				if(gameboardsimplearray[j] > gameboardsimplearray[i]):
+					inversion += 1
+			j += 1
+		i += 1
+
+	print("\nTotal inversion : " + str(inversion))
+	if(inversion % 2 == 1):
+		return False
+	else:
+		return True
+
 def manhattan(width, gameboard, finalboard):
 	result = 0
 	for i in range(width):
@@ -108,6 +132,10 @@ def construct(width):
 	for row in finalboard:
 		print(str(row))
 
+	#If total inversion % 2 == 1, puzzle is unsolvable
+	checkifsolvable = checkIfSolvable(gameboard)
+	if (checkifsolvable == False):
+		return(print("\n\033[91mThis game board is unsolvable !\033[90m"))
 	#Call A star, time instentiation 
 	print("\n\033[95mprocessing : \033[0m")
 	time1 = time.time()
