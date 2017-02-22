@@ -1,13 +1,7 @@
 import random, time, sys
 from heapq import heapify, heappush, heappop
 
-def checkIfSolvable(gameboard):
-	gameboardsimplearray = []
-	for elem in gameboard:
-		for value in elem:
-			gameboardsimplearray.append(value)
-	
-	size = len(gameboardsimplearray)
+def loopOnBoardInversion(gameboardsimplearray, size):
 	i = 0
 	inversion = 0
 	while(i < size):
@@ -18,12 +12,47 @@ def checkIfSolvable(gameboard):
 					inversion += 1
 			j += 1
 		i += 1
+	return inversion
 
-	print("\nTotal inversion : " + str(inversion))
-	if(inversion % 2 == 1):
-		return False
+def checkIfSolvable(gameboard):
+	gameboardsimplearray = []
+	numberElem = -1
+	for elem in gameboard:
+		for value in elem:
+			gameboardsimplearray.append(value)
+		numberElem += 1
+
+	positionZero = 0
+	while(0 <= numberElem):
+		for elem in gameboard[numberElem]:
+			if elem == 0:
+				positionZero = numberElem
+		numberElem -= 1
+
+	inversion = 0
+	size = len(gameboardsimplearray)
+	if size % 2 == 1:
+		inversion = loopOnBoardInversion(gameboardsimplearray, size)
+		print("\nTotal inversion : " + str(inversion))
+		if(inversion % 2 == 1):
+			return False
+		else:
+			return True
 	else:
-		return True
+		if positionZero % 2 == 1:
+			inversion = loopOnBoardInversion(gameboardsimplearray, size)
+			print("\nTotal inversion : " + str(inversion))
+			if (inversion % 2 == 1):
+				return False
+			else:
+				return True
+		else:
+			inversion = loopOnBoardInversion(gameboardsimplearray, size)
+			print("\nTotal inversion : " + str(inversion))
+			if (inversion % 2 == 0):
+				return False
+			else:
+				return True
 
 def manhattan(width, gameboard, finalboard):
 	result = 0
@@ -36,9 +65,22 @@ def manhattan(width, gameboard, finalboard):
 					if (finalboard[i][j] == gameboard[l][m]):
 						result += (abs (m - j) + abs (l - i))
 						break
-	return (result)
+	return(result + 2)
 
-def getNextStates (width, current):
+def hamming_distance(width, gameboard, finalboard):
+	gameboardsimplearray = ''
+	for elem in gameboard:
+		for value in elem:
+			gameboardsimplearray += str(value)
+	
+	finalboardsimplearray = ''
+	for elem in finalboard:
+		for value in elem:
+			finalboardsimplearray += str(value)
+
+	return sum(el1 != el2 for el1, el2 in zip(gameboardsimplearray, finalboardsimplearray))
+
+def getNextStates (width, current, laststate):
 	nextStates = []
 	empty = None
 
@@ -50,22 +92,22 @@ def getNextStates (width, current):
 		empty = (i, empty)
 		break
 
-	if (empty[1] < (width - 1)):
+	if (empty[1] < (width - 1) and laststate != 'LEFT'):
 		a = [i.copy () for i in current]
 		a [empty[0]] [empty[1]], a[empty[0]][empty[1] + 1] = a[empty[0]][empty[1] + 1], a[empty[0]][empty[1]]
 		nextStates.append(('RIGHT', a, (empty[0], empty[1] + 1)))
 
-	if (empty[1] > 0):
+	if (empty[1] > 0 and laststate != 'RIGHT'):
 		b = [i.copy () for i in current]
 		b [empty[0]][empty[1]], b[empty[0]][empty[1] - 1] = b[empty[0]][empty[1] - 1], b[empty[0]][empty[1]]
 		nextStates.append(('LEFT', b, (empty[0], empty[1] - 1)))
 
-	if (empty[0] > 0):
+	if (empty[0] > 0 and laststate != 'DOWN'):
 		c = [i.copy () for i in current]
 		c [empty[0]][empty[1]], c[empty[0] - 1][empty[1]] = c[empty[0] - 1][empty[1]], c[empty[0]][empty [1]]
 		nextStates.append(('UP', c, (empty[0] - 1, empty[1])))
 
-	if (empty[0] < (width - 1)):
+	if (empty[0] < (width - 1) and laststate != 'UP'):
 		d = [i.copy () for i in current]
 		d [empty[0]][empty[1]], d[empty[0] + 1][empty [1]] = d[empty[0] + 1][empty[1]], d[empty[0]][empty [1]]
 		nextStates.append(('DOWN', d, (empty[0] + 1, empty[1])))
@@ -74,6 +116,7 @@ def getNextStates (width, current):
 def getSequenceInfo (width, gameboard, finalboard):
 	current = (manhattan(width, gameboard, finalboard), 0, [], gameboard)
 	stateTree = [current]
+	print("Estimate manhatan distance : " + str(current[0]))
 	heapify(stateTree)
 	i = 0
 	while (not current[-1] == finalboard):
@@ -83,8 +126,10 @@ def getSequenceInfo (width, gameboard, finalboard):
 		sys.stdout.write("\033[93m\b%s\033[0m"%syms[i])
 		sys.stdout.flush()
 		i += 1
+		allstate = []
 		current = heappop(stateTree)
-		for state in getNextStates(width, current[-1]):
+		state = [None]
+		for state in getNextStates(width, current[-1], state[0]):
 			heappush(stateTree,  (manhattan(width, state[1], finalboard) + current[1] + 1, current[1] + 1, current[2] + [state[0]], state[1]))
 	return (current[1], current[2])
 
