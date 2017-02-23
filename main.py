@@ -35,7 +35,7 @@ def checkIfSolvable(gameboard):
 	size = len(gameboardsimplearray)
 	if size % 2 == 1:
 		inversion = loopOnBoardInversion(gameboardsimplearray, size)
-		print("\nTotal inversion : " + str(inversion))
+		print("\n\033[91mTotal inversion : \033[0m" + str(inversion))
 		if(inversion % 2 == 1):
 			return False
 		else:
@@ -43,14 +43,14 @@ def checkIfSolvable(gameboard):
 	else:
 		if positionZero % 2 == 1:
 			inversion = loopOnBoardInversion(gameboardsimplearray, size)
-			print("\nTotal inversion : " + str(inversion))
+			print("\n\033[91mTotal inversion : \033[0m" + str(inversion))
 			if (inversion % 2 == 1):
 				return False
 			else:
 				return True
 		else:
 			inversion = loopOnBoardInversion(gameboardsimplearray, size)
-			print("\nTotal inversion : " + str(inversion))
+			print("\n\033[91mTotal inversion : \033[0m" + str(inversion))
 			if (inversion % 2 == 0):
 				return False
 			else:
@@ -106,18 +106,17 @@ def construct(width):
 	#Call A star, time instentiation 
 	print("\n\033[95mprocessing : \033[0m")
 	time1 = time.time()
-	if width > 3:
-		seqCount, sequence = idaStar(num_moves(width, width), gameboard, finalboard)
-	else:
-		seqCount, sequence = aStar(width, gameboard, finalboard)
+	#if width > 1:
+	#	seqCount, sequence = idaStar(num_moves(width, width), gameboard, finalboard)
+	#else:
+	seqCount, sequence = aStar(width, gameboard, finalboard)
 	#Time finished A star
 	time2 = time.time()
 
 	#Print time, number of move and all move to accomplite board
 	print("\n\033[91mTime : \033[0m" + str(round(time2 - time1, 3)) + "scd")
 	print("\033[91mNumber of move : \033[0m" + str(seqCount))
-	print('\033[91mAll move : \033[0m\033[92m')
-	print('\n' + str(sequence))
+	print('\033[91mAll move : \033[0m\033[92m' + str(sequence))
 	return
 
 if __name__ == '__main__':

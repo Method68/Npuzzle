@@ -11,7 +11,8 @@ def manhattan(width, gameboard, finalboard):
 					if (finalboard[i][j] == gameboard[l][m]):
 						result += (abs (m - j) + abs (l - i))
 						break
-	return(result + 2)
+	result += 2
+	return(result)
 
 # def manhattan(width, gameboard, finalboard):
 # 	result = 0
@@ -22,7 +23,8 @@ def manhattan(width, gameboard, finalboard):
 # 				x_dist = abs(i - current / width)
 # 				y_dist = abs(j - current % width)
 # 				result += x_dist + y_dist
-# 	return(result + 2)
+# 	result += 2
+# 	return(result)
 
 def hamming_distance(width, gameboard, finalboard):
 	gameboardsimplearray = ''

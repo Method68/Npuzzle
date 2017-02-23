@@ -1,11 +1,13 @@
 import random, time, sys
+import queue as Q
 from heuristic import manhattan
 from heapq import heapify, heappush, heappop
 
+test = 0
 def getNextStates (width, current, laststate):
 	nextStates = []
 	empty = None
-
+	global test
 	for i in range(width):
 		try:
 			empty = current[i].index(0)
@@ -15,23 +17,23 @@ def getNextStates (width, current, laststate):
 		break
 
 	if (empty[1] < (width - 1) and laststate != 'LEFT'):
-		a = [i.copy () for i in current]
-		a [empty[0]] [empty[1]], a[empty[0]][empty[1] + 1] = a[empty[0]][empty[1] + 1], a[empty[0]][empty[1]]
+		a = [i.copy() for i in current]
+		a[empty[0]][empty[1]], a[empty[0]][empty[1] + 1] = a[empty[0]][empty[1] + 1], a[empty[0]][empty[1]]
 		nextStates.append(('RIGHT', a, (empty[0], empty[1] + 1)))
 
 	if (empty[1] > 0 and laststate != 'RIGHT'):
-		b = [i.copy () for i in current]
-		b [empty[0]][empty[1]], b[empty[0]][empty[1] - 1] = b[empty[0]][empty[1] - 1], b[empty[0]][empty[1]]
+		b = [i.copy() for i in current]
+		b[empty[0]][empty[1]], b[empty[0]][empty[1] - 1] = b[empty[0]][empty[1] - 1], b[empty[0]][empty[1]]
 		nextStates.append(('LEFT', b, (empty[0], empty[1] - 1)))
 
 	if (empty[0] > 0 and laststate != 'DOWN'):
-		c = [i.copy () for i in current]
-		c [empty[0]][empty[1]], c[empty[0] - 1][empty[1]] = c[empty[0] - 1][empty[1]], c[empty[0]][empty [1]]
+		c = [i.copy() for i in current]
+		c[empty[0]][empty[1]], c[empty[0] - 1][empty[1]] = c[empty[0] - 1][empty[1]], c[empty[0]][empty [1]]
 		nextStates.append(('UP', c, (empty[0] - 1, empty[1])))
 
 	if (empty[0] < (width - 1) and laststate != 'UP'):
-		d = [i.copy () for i in current]
-		d [empty[0]][empty[1]], d[empty[0] + 1][empty [1]] = d[empty[0] + 1][empty[1]], d[empty[0]][empty [1]]
+		d = [i.copy() for i in current]
+		d[empty[0]][empty[1]], d[empty[0] + 1][empty [1]] = d[empty[0] + 1][empty[1]], d[empty[0]][empty [1]]
 		nextStates.append(('DOWN', d, (empty[0] + 1, empty[1])))
 	return (nextStates)
 
@@ -49,7 +51,9 @@ def aStar (width, gameboard, finalboard):
 		sys.stdout.flush()
 		i += 1
 		current = heappop(stateTree)
-		state = [None]
-		for state in getNextStates(width, current[-1], state[0]):
+		state = None
+		for elem in current[2]:
+			state = elem
+		for state in getNextStates(width, current[-1], state):
 			heappush(stateTree,  (manhattan(width, state[1], finalboard) + current[1] + 1, current[1] + 1, current[2] + [state[0]], state[1]))
 	return (current[1], current[2])
