@@ -1,5 +1,4 @@
 import random, time, sys
-import queue as Q
 from heuristic import manhattan
 from heapq import heapify, heappush, heappop
 
@@ -35,8 +34,9 @@ def getNextStates (width, current, laststate):
 		d = [i.copy() for i in current]
 		d[empty[0]][empty[1]], d[empty[0] + 1][empty [1]] = d[empty[0] + 1][empty[1]], d[empty[0]][empty [1]]
 		nextStates.append(('DOWN', d, (empty[0] + 1, empty[1])))
+	#print(str(nextStates) + '\n')
 	return (nextStates)
-
+ 
 def aStar (width, gameboard, finalboard):
 	current = (manhattan(width, gameboard, finalboard), 0, [], gameboard)
 	stateTree = [current]

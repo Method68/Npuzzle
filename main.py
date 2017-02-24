@@ -1,5 +1,6 @@
 import random, time, sys
-from idastar import idaStar, num_moves
+import pygame
+from idastar import IDA_star
 from astar import aStar
 from heapq import heapify, heappush, heappop
 
@@ -106,10 +107,10 @@ def construct(width):
 	#Call A star, time instentiation 
 	print("\n\033[95mprocessing : \033[0m")
 	time1 = time.time()
-	#if width > 1:
-	#	seqCount, sequence = idaStar(num_moves(width, width), gameboard, finalboard)
+	#if width > 3:
+	seqCount, sequence = IDA_star(width, gameboard, finalboard)
 	#else:
-	seqCount, sequence = aStar(width, gameboard, finalboard)
+	#	seqCount, sequence = aStar(width, gameboard, finalboard)
 	#Time finished A star
 	time2 = time.time()
 
