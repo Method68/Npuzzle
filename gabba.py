@@ -112,8 +112,8 @@ def build_board(squareside, rects, fenetre):
 def main():
 	pygame.init()
 	fenetre = pygame.display.set_mode((800, 600), 0, 32)
-	fond = pygame.image.load("/home/gabba/tmp_trash/puzzle-654962_1920.jpg").convert()
-	fenetre.blit(fond, (0,0))
+	# fond = pygame.image.load("/home/gabba/tmp_trash/puzzle-654962_1920.jpg").convert()
+	# fenetre.blit(fond, (0,0))
 	pygame.display.flip()
 	loop = 1
 	squareside = 4
@@ -126,7 +126,7 @@ def main():
 			if event.type == KEYDOWN:
 				rects = key_hook(rects, event.key, squareside)
 
-		fenetre.blit(fond, (0,0))
+		# fenetre.blit(fond, (0,0))
 		i = 0
 		while (i < (squareside*squareside)):
 			fenetre.blit(rects[i].body, (rects[i].x, rects[i].y))
