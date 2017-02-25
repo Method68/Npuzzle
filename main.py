@@ -1,8 +1,10 @@
 #!/usr/bin/env python
-
 import random, os.path
 
+#Our stuff
+import player
 import core_solver
+import utils
 
 #import basic pygame modules
 import pygame
@@ -11,10 +13,6 @@ from pygame.locals import *
 #see if we can load more than standard BMP
 if not pygame.image.get_extended():
 		raise SystemExit("Sorry, extended image module required")
-
-blocksize = 50
-tabposx = 150
-tabposy = 150
 
 class Rect(object):
 	"""__init__() functions as the class constructor"""
@@ -28,108 +26,32 @@ class Rect(object):
 			self.color = (255, 255, 255)
 		self.x = x
 		self.y = y
-		self.body = pygame.Surface((blocksize,blocksize))
+		self.body = pygame.Surface((utils.blocksize,utils.blocksize))
 		self.body.fill(self.color)
 		self.number = str(i)
 		# print ("My number is")
 		# print (self.number)
 
-def checkborder(index, squareside, rect0):
-	if index[1] == 'y':
-		if ((index[0] == '+') and ((rect0.y + blocksize) == tabposy + squareside*blocksize)):
-			return 0
-		if ((index[0] == '-') and ((rect0.y) == tabposy)):
-			return 0
-	elif index[1] == 'x':
-		if ((index[0] == '+') and ((rect0.x + blocksize) == tabposx + squareside*blocksize)):
-			return 0
-		if ((index[0] == '-') and ((rect0.x) == tabposx)):
-			return 0
-	return 1	
+def create_a_solvable_grid(width, squareside, allcase, allcase_order):
+	finalboard = utils.set_board(allcase_order, width)
+	gameboard = utils.set_board(allcase, width)
 
-def swap_values(rectx, rects):
-	rect0 = rects[0]
-	for rect in rects:
-		if rect.number == '0':
-			rect0 = rect
-	for new_rect in rects:
-		if rectx.number == new_rect.number:
-			tmpy = rect0.y
-			rect0.y = new_rect.y
-			new_rect.y = tmpy
-			tmpx = rect0.x
-			rect0.x = new_rect.x
-			new_rect.x = tmpx
-	return rects
+	solvable = core_solver.construct(squareside, gameboard, finalboard)
+	if (solvable != None):
+		print ("Board Builded")
+		return solvable
+	else:
+		print ("Board Not Builded")
+		return None
 
-def switch_rects(move, rects):
-	# print " !!!  value of rects[0].x:"+str(rects[0].x)+" rects[0].y:"+str(rects[0].y)
-	# print "move:"+move
-	rect0 = rects[0]
-	for rect in rects:
-		if rect.number == '0':
-			rect0 = rect
-	for rect in rects:
-		if move[1] == 'y':
-			if ((move[0] == '+') and ((rect0.y + blocksize) == rect.y) and ((rect0.x) == rect.x)):
-				rects = swap_values(rect, rects)
-				break
-			elif ((move[0] == '-') and ((rect0.y - blocksize) == rect.y) and ((rect0.x) == rect.x)):
-				rects = swap_values(rect, rects)
-				break
-		elif move[1] == 'x':
-			if ((move[0] == '+') and ((rect0.x + blocksize) == rect.x) and ((rect0.y) == rect.y)):
-				rects = swap_values(rect, rects)
-				break
-			elif ((move[0] == '-') and ((rect0.x - blocksize) == rect.x) and ((rect0.y) == rect.y)):
-				rects = swap_values(rect, rects)
-				break
-	return rects
-
-def key_hook(rects, key, squareside):
-	rect0 = rects[0]
-	for rect in rects:
-		# print "print rect info 1"
-		# print rect.number
-		if rect.number == '0':
-			# print "print rect info"
-			# print rect0.x
-			# print rect0.y
-			# print rect0.number
-			rect0 = rect
-	if key == K_DOWN:
-		print ("DOWN")
-		if (checkborder("+y", squareside, rect0)):
-			rects = switch_rects("+y", rects)
-	elif key == K_UP:
-		print ("UP")
-		if (checkborder("-y", squareside, rect0)):
-			rects = switch_rects("-y", rects)
-	elif key == K_RIGHT:
-		print ("RIGHT")
-		if (checkborder("+x", squareside, rect0)):
-			rects = switch_rects("+x", rects)
-	elif key == K_LEFT:
-		print ("LEFT")
-		if (checkborder("-x", squareside, rect0)):
-			rects = switch_rects("-x", rects)
-	return rects
-
-def build_board(index, squareside, rects, fenetre):
+def first_draw(squareside, fenetre, rects):
 	i = 0
-	tmpx = tabposx
-	tmpy = tabposy
-	while (i < squareside*squareside):
-		# print (i)
-		# print (index[i])
-		rects.append(Rect(fenetre, tmpx, tmpy, index[i]))
-		if ((tmpx / ((squareside*blocksize - blocksize) + tabposx)) == 1.00):
-			tmpx = tabposx
-			tmpy += blocksize
-		else:
-			tmpx += blocksize
+	while (i < (squareside*squareside)):
+		# block-body
+		utils.draw_block(rects, fenetre, i)
+		fenetre.blit(rects[i].body, (rects[i].x, rects[i].y))
+		pygame.display.update()
 		i += 1
-	return rects
 
 def main():
 	pygame.init()
@@ -139,114 +61,55 @@ def main():
 	pygame.display.flip()
 	loop = 1
 	squareside = input('\033[92mChoose size for Npuzzle: \n')
-
 	width = int(squareside)
 	solvable = None
+	
+	# First loop which call core_solver.construct to do the job
 	while (solvable == None):
 		allvalue = width * width
-		#list trier pour le tableau de fin
 		allcase_order = [x for x in range(0, allvalue)]
-		#list random pour le tableau de jeu
 		allcase = random.sample(range(allvalue),allvalue)
+		ia_final_move = create_a_solvable_grid(width, squareside, allcase, allcase_order)
+		if ia_final_move:
+			solvable = ia_final_move
+		rects = []
+		rects = utils.build_board(allcase, squareside, rects, fenetre)
 
-		#Cree un tableau a 2 dimension pour le tableau a atteindre fin du jeu
-		finalboard = []
-		k = 0
-		for i in range(width):
-			new = []
-			for j in range(width):
-				new.append(allcase_order[k])
-				k += 1
-			finalboard.append(new)
-
-		#Cree un tableau a 2 dimension pour le plateau de jeu
-		gameboard = []
-		order= []
-		k = 0
-		for i in range(width):
-			new = []
-			for j in range(width):
-				new.append(allcase[k])
-				k += 1
-			gameboard.append(new)
-
-		solvable = core_solver.construct(squareside, gameboard, finalboard)
-		if (solvable != None):
-			rects = []
-			rects = build_board(allcase, squareside, rects, fenetre)
-			print ("Board Builded")
-			ia_final_move = solvable
-			print solvable
-		else:
-			print ("Board Not Builded")
 
 	len_move = len(ia_final_move)
 	index_move = 0
 	space = 0
-	# rects = key_hook(rects, event.key, squareside)
-	i = 0
-	while (i < (squareside*squareside)):
-		print "HERE"
-		# block-body
-		fenetre.blit(rects[i].body, (rects[i].x, rects[i].y))
-		# block-border
-		pygame.draw.rect(fenetre, [238, 238, 224], (rects[i].x, rects[i].y, 50, 50), 1)
-		#display number
-		myfont = pygame.font.SysFont("monospace", 15)
-		label = myfont.render(rects[i].number, 1, (1,1,1))
-		rects[i].body.blit(label, (15, 15))
-		fenetre.blit(rects[i].body, (rects[i].x, rects[i].y))
-		pygame.display.update()
-		i += 1
+	#Display the grid before we start
+	first_draw(squareside, fenetre, rects)
 
+	# Second loop To display player moves
 	while loop:
 		for event in pygame.event.get():
-			if event.type == QUIT:
+			if event.type == QUIT or (event.type == KEYDOWN and event.key == K_ESCAPE):
 				loop = 0
 			if event.type == KEYDOWN:
 				if event.key == K_SPACE:
 					space = 1
-				rects = key_hook(rects, event.key, squareside)
+				else:
+					rects = player.key_hook(rects, event.key, squareside)
 
+		#use space to see the next step
 		if space == 1:
-
-			#ia move
-			if ia_final_move[index_move] == 'UP':
-				key = K_UP
-			if ia_final_move[index_move] == 'DOWN':
-				key = K_DOWN
-			if ia_final_move[index_move] == 'LEFT':
-				key = K_LEFT
-			if ia_final_move[index_move] == 'RIGHT':
-				key = K_RIGHT
-			rects = key_hook(rects, key, squareside)
+			utils.ia_move(ia_final_move, index_move, rects, squareside)
+			# display an background images
 			# fenetre.blit(fond, (0,0))
-			
 			i = 0
 			while (i < (squareside*squareside)):
-				# block-body
-				fenetre.blit(rects[i].body, (rects[i].x, rects[i].y))
-				# block-border
-				pygame.draw.rect(fenetre, [238, 238, 224], (rects[i].x, rects[i].y, 50, 50), 1)
-				#display number
-				myfont = pygame.font.SysFont("monospace", 15)
-				label = myfont.render(rects[i].number, 1, (1,1,1))
-				rects[i].body.blit(label, (15, 15))
+				utils.draw_block(rects, fenetre, i)
 				i += 1
-
-			rect0 = rects[0]
-			for rect in rects:
-				if rect.number == '0':
-					rect0 = rect
-			fenetre.blit(rect0.body, (rect0.x, rect0.y))
+			block0 = utils.get_block_zero(rects)
+			fenetre.blit(block0.body, (block0.x, block0.y))
 			pygame.display.update()
+			# for fenetre font
 			# pygame.display.flip()
 			index_move += 1
 			if index_move == len_move:
+				print "WIN"
 				break
-			space -= 1
-	print "WIN"
-	while loop:
-		loop = 1
-
+			space = 0
 if __name__ == '__main__': main()
