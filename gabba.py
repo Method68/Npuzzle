@@ -17,18 +17,21 @@ tabposy = 150
 class Rect(object):
 	"""__init__() functions as the class constructor"""
 	def __init__(self, fenetre=None, x=None, y=None, i=None):
-		print "obj"+str(i)
+		print ("obj"+str(i))
 		if i == 0:
-			self.color = ((10,10,255))
-		self.color = (((i * 3)+150, (i * 4)+150, (i * 1)+150))
+			print ("i = 0")
+			self.color = (180, 205, 205)
+		else :
+			# self.color = (((i * 3)+150, (i * 4)+150, (i * 1)+150))
+			self.color = (255, 255, 255)
 		self.x = x
 		self.y = y
 		self.body = pygame.Surface((blocksize,blocksize))
 		self.body.fill(self.color)
 		self.number = str(i)
 		myfont = pygame.font.SysFont("monospace", 15)
-		label = myfont.render(self.number, 1, (255,255,255))
-		self.body.blit(label, (0, 0))
+		label = myfont.render(self.number, 1, (1,1,1))
+		self.body.blit(label, (15, 15))
 
 def checkborder(index, squareside, rect0):
 	if index[1] == 'y':
@@ -130,6 +133,7 @@ def main():
 		i = 0
 		while (i < (squareside*squareside)):
 			fenetre.blit(rects[i].body, (rects[i].x, rects[i].y))
+			pygame.draw.rect(fenetre, [238, 238, 224], (rects[i].x, rects[i].y, 50, 50), 1)
 			i += 1
 		fenetre.blit(rects[0].body, (rects[0].x, rects[0].y))
 		pygame.display.update()
