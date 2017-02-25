@@ -58,10 +58,10 @@ def swap_values(rect0, rectx, rects):
 	return rects
 
 def switch_rects(move, rects):
-	print " !!!  value of rects[0].x:"+str(rects[0].x)+" rects[0].y:"+str(rects[0].y)
-	print "move:"+move
+	print (" !!!  value of rects[0].x:"+str(rects[0].x)+" rects[0].y:"+str(rects[0].y))
+	print ("move:"+move)
 	for rect in rects:
-		print "value of rect.x:"+str(rect.x)+" rect.y:"+str(rect.y) 
+		print ("value of rect.x:"+str(rect.x)+" rect.y:"+str(rect.y))
 		if move[1] == 'y':
 			if ((move[0] == '+') and ((rects[0].y + blocksize) == rect.y) and ((rects[0].x) == rect.x)):
 				rects = swap_values(rects[0], rect, rects)
