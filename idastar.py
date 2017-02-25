@@ -17,23 +17,23 @@ def getNextStates (width, current):
         empty = (i, empty)
         break
 
-    if (empty[1] < (width - 1)):
-        a = [i.copy() for i in current]
+    if (empty[1] < (width - 1) and laststate != 'LEFT'):
+        a = [i[:] for i in current]
         a[empty[0]][empty[1]], a[empty[0]][empty[1] + 1] = a[empty[0]][empty[1] + 1], a[empty[0]][empty[1]]
         nextStates.append((a, 'RIGHT'))
 
-    if (empty[1] > 0):
-        b = [i.copy() for i in current]
+    if (empty[1] > 0 and laststate != 'RIGHT'):
+        b = [i[:] for i in current]
         b[empty[0]][empty[1]], b[empty[0]][empty[1] - 1] = b[empty[0]][empty[1] - 1], b[empty[0]][empty[1]]
         nextStates.append((b, 'LEFT'))
 
-    if (empty[0] > 0):
-        c = [i.copy() for i in current]
+    if (empty[0] > 0 and laststate != 'DOWN'):
+        c = [i[:] for i in current]
         c[empty[0]][empty[1]], c[empty[0] - 1][empty[1]] = c[empty[0] - 1][empty[1]], c[empty[0]][empty [1]]
         nextStates.append((c, 'UP'))
 
-    if (empty[0] < (width - 1)):
-        d = [i.copy() for i in current]
+    if (empty[0] < (width - 1) and laststate != 'UP'):
+        d = [i[:] for i in current]
         d[empty[0]][empty[1]], d[empty[0] + 1][empty [1]] = d[empty[0] + 1][empty[1]], d[empty[0]][empty [1]]
         nextStates.append((d, 'DOWN'))
 
