@@ -2,7 +2,6 @@
 import random, os.path
 
 #Our stuff
-import player
 import core_solver
 import utils
 
@@ -54,12 +53,8 @@ def first_draw(squareside, fenetre, rects):
 		i += 1
 
 def main():
-	pygame.init()
-	fenetre = pygame.display.set_mode((800, 600), 0, 32)
-	# fond = pygame.image.load("/home/gabba/tmp_trash/puzzle-654962_1920.jpg").convert()
-	# fenetre.blit(fond, (0,0))
-	pygame.display.flip()
 	loop = 1
+	fenetre = pygame.display.set_mode((800, 600), 0, 32)
 	squareside = input('\033[92mChoose size for Npuzzle: \n')
 	width = int(squareside)
 	solvable = None
@@ -75,6 +70,10 @@ def main():
 		rects = []
 		rects = utils.build_board(allcase, squareside, rects, fenetre)
 
+	pygame.init()
+	# fond = pygame.image.load("/home/gabba/tmp_trash/puzzle-654962_1920.jpg").convert()
+	# fenetre.blit(fond, (0,0))
+	pygame.display.flip()
 	len_move = len(ia_final_move)
 	index_move = 0
 	space = 0
@@ -90,7 +89,7 @@ def main():
 				if event.key == K_SPACE:
 					space = 1
 				else:
-					rects = player.key_hook(rects, event.key, squareside)
+					rects = utils.key_hook(rects, event.key, squareside)
 		#use space to see the next step
 		if space == 1:
 			utils.ia_move(ia_final_move, index_move, rects, squareside)
