@@ -78,13 +78,19 @@ def IDA_star(width, gameboard, finalboard):
             tmp = IDA(width, gameboard, tmpboard, 0, current)
             if tmp == 1:
                 print ("allmoves")
-                print allmoves
+                print (allmoves)
                 print ("allmovesstring[::-1]")
-                print allmovesstring[::-1]
+                print (allmovesstring[::-1])
                 break
                 # return allmoves, allmovesstring[::-1]
             if tmp == float("inf"):
                 return 'Fail', 'Fail'
+            print ("TMP")
+            print (tmp)
+            print ("allmoves")
+            print (allmoves)
+            print ("allmovesstring[::-1]")
+            print (allmovesstring[::-1])
             current = tmp    
         i += 1
     sys.exit()
@@ -116,9 +122,9 @@ def IDA(width, gameboard, finalboard, g, current):
 
     for sibling in getNextStates(width, gameboard):
         tmp = IDA(width, sibling[0], finalboard, g + 1, current)
-        if j == 0:
-            print(sibling[1])
-            print(sibling[0])
+        # if j == 0:
+            # print(sibling[1])
+            # print(sibling[0])
         if tmp == 1:
             allmoves += 1
             allmovesstring.append(sibling[1])
