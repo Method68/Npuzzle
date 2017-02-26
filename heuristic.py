@@ -15,31 +15,31 @@ import random, time, sys
 # 	total_distance += 2
 # 	return total_distance
 
-# def manhattan(width, gameboard, finalboard):
-# 	result = 0
-# 	for i in range(width):
-# 		for j in range(width):
-# 			if (finalboard[i][j] == 0):
-# 				continue
-# 			for l in range(width):
-# 				for m in range(width):
-# 					if (finalboard[i][j] == gameboard[l][m]):
-# 						result += (abs (m - j) + abs (l - i))
-# 						break
-# 	result += 2
-# 	return(result)
-
 def manhattan(width, gameboard, finalboard):
 	result = 0
-	for i in range(width):
-		for j in range(width):
-			current = gameboard[i][j]
-			if current is not 0:
-				x_dist = abs(i - current / width)
-				y_dist = abs(j - current % width)
-				result += x_dist + y_dist
+	for raw in range(width/2):
+		for col in range(width):
+			if (finalboard[raw][col] == 0):
+				continue
+			for l in range(width):
+				for m in range(width):
+					if (finalboard[raw][col] == gameboard[l][m]):
+						result += (abs (m - col) + abs (l - raw))
+						break
 	result += 2
 	return(result)
+
+# def manhattan(width, gameboard, finalboard):
+# 	result = 0
+# 	for raw in range(width):
+# 		for col in range(width):
+# 			current = gameboard[raw][col]
+# 			if current is not 0:
+# 				x_dist = abs(raw - current / width)
+# 				y_dist = abs(col - current % width)
+# 				result += x_dist + y_dist
+# 	result += 2
+# 	return(result)
 
 def hamming_distance(width, gameboard, finalboard):
 	gameboardsimplearray = ''
