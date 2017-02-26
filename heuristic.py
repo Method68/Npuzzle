@@ -17,7 +17,7 @@ import random, time, sys
 
 def manhattan(width, gameboard, finalboard):
 	result = 0
-	for raw in range(width/2):
+	for raw in range(width):
 		for col in range(width):
 			if (finalboard[raw][col] == 0):
 				continue
@@ -25,7 +25,7 @@ def manhattan(width, gameboard, finalboard):
 				for m in range(width):
 					if (finalboard[raw][col] == gameboard[l][m]):
 						result += (abs (m - col) + abs (l - raw))
-						break
+						return result
 	result += 2
 	return(result)
 

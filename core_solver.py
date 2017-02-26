@@ -42,7 +42,7 @@ def checkIfSolvable(gameboard):
 		else:
 			return True
 	else:
-		if positionZero % 2 == 1:
+		if positionZero % 2 == 0:
 			inversion = loopOnBoardInversion(gameboardsimplearray, size)
 			print("\n\033[91mTotal inversion : \033[0m" + str(inversion))
 			if (inversion % 2 == 1):
