@@ -16,7 +16,7 @@ import random, time, sys
 # 	return total_distance
 
 def manhattan(width, gameboard, finalboard, match):
-	return_index = 1
+	return_index = 0
 	result = 0
 	for raw in range(width):
 		for col in range(width):
@@ -26,11 +26,12 @@ def manhattan(width, gameboard, finalboard, match):
 				for m in range(width):
 					if (finalboard[raw][col] == gameboard[l][m]):
 						result += (abs (m - col) + abs (l - raw))
-						if return_index == match:
-							return result
-						else:
-							break
-						return_index += 1
+						return result
+						# if return_index == match:
+						# 	return result
+						# else:
+						# 	break
+						# return_index += 1
 	result += 2
 	return(result)
 
