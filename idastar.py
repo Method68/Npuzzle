@@ -44,10 +44,10 @@ def IDA_star(width, gameboard, finalboard):
     
     # for raw in len(finalboard)
 
-    print "gameboard"
-    print gameboard
-    print "finalboard"
-    print finalboard
+    print ("gameboard")
+    print (gameboard)
+    print ("finalboard")
+    print (finalboard)
 
     demi_fboard1 = []
     demi_fboard2 = []
@@ -59,23 +59,32 @@ def IDA_star(width, gameboard, finalboard):
             demi_fboard2.append(finalboard[i])
         i += 1
 
-    print "demi_fboard1"
-    print demi_fboard1
-    print "demi_fboard2"
-    print demi_fboard2
+    print ("demi_fboard1")
+    print (demi_fboard1)
+    print ("demi_fboard2")
+    print (demi_fboard2)
 
-
+    i = 0
+    while (i < 2):
+        if (i == 0):
+            tmpboard = demi_fboard1
+        else:
+            tmpboard = demi_fboard2
+        current = manhattan(width, gameboard, tmpboard)
+        while(1):
+            tmp = IDA(width, gameboard, tmpboard, 0, current)
+            if tmp == 1:
+                print ("allmoves")
+                print allmoves
+                print ("allmovesstring[::-1]")
+                print allmovesstring[::-1]
+                break
+                # return allmoves, allmovesstring[::-1]
+            if tmp == float("inf"):
+                return 'Fail', 'Fail'
+            current = tmp    
+        i += 1
     sys.exit()
-    
-
-    current = manhattan(width, gameboard, finalboard)
-    while(1):
-        tmp = IDA(width, gameboard, finalboard, 0, current)
-        if tmp == 1:
-            return allmoves, allmovesstring[::-1]
-        if tmp == float("inf"):
-            return 'Fail', 'Fail'
-        current = tmp
 
 j = 0
 def IDA(width, gameboard, finalboard, g, current):
