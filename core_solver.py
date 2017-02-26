@@ -80,7 +80,7 @@ def construct(width, gameboard, finalboard):
 	#if width > 3:
 	seqCount, sequence = IDA_star(width, gameboard, finalboard)
 	#else:
-	#	seqCount, sequence = aStar(width, gameboard, finalboard)
+	# seqCount, sequence = aStar(width, gameboard, finalboard)
 	#Time finished A star
 	time2 = time.time()
 

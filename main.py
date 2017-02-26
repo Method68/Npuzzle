@@ -56,13 +56,16 @@ def main():
 	loop = 1
 	fenetre = pygame.display.set_mode((800, 600), 0, 32)
 	squareside = input('\033[92mChoose size for Npuzzle: \n')
-	width = int(squareside)
+	squareside = int(squareside)
+	width = squareside
 	solvable = None
 	
 	# First loop which call core_solver.construct to do the job
 	while (solvable == None):
 		allvalue = width * width
 		allcase_order = [x for x in range(0, allvalue)]
+		allcase_order.pop(0)
+		allcase_order.append(0)
 		allcase = random.sample(range(allvalue),allvalue)
 		ia_final_move = create_a_solvable_grid(width, squareside, allcase, allcase_order)
 		if ia_final_move:
@@ -106,7 +109,7 @@ def main():
 			# pygame.display.flip()
 			index_move += 1
 			if index_move == len_move:
-				print "WIN"
+				print ("WIN")
 				break
 			space = 0
 if __name__ == '__main__': main()

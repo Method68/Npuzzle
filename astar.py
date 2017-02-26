@@ -16,22 +16,22 @@ def getNextStates (width, current, laststate):
 		break
 
 	if (empty[1] < (width - 1) and laststate != 'LEFT'):
-		a = [i.copy() for i in current]
+		a = [i[:] for i in current]
 		a[empty[0]][empty[1]], a[empty[0]][empty[1] + 1] = a[empty[0]][empty[1] + 1], a[empty[0]][empty[1]]
 		nextStates.append(('RIGHT', a, (empty[0], empty[1] + 1)))
 
 	if (empty[1] > 0 and laststate != 'RIGHT'):
-		b = [i.copy() for i in current]
+		b = [i[:] for i in current]
 		b[empty[0]][empty[1]], b[empty[0]][empty[1] - 1] = b[empty[0]][empty[1] - 1], b[empty[0]][empty[1]]
 		nextStates.append(('LEFT', b, (empty[0], empty[1] - 1)))
 
 	if (empty[0] > 0 and laststate != 'DOWN'):
-		c = [i.copy() for i in current]
+		c = [i[:] for i in current]
 		c[empty[0]][empty[1]], c[empty[0] - 1][empty[1]] = c[empty[0] - 1][empty[1]], c[empty[0]][empty [1]]
 		nextStates.append(('UP', c, (empty[0] - 1, empty[1])))
 
 	if (empty[0] < (width - 1) and laststate != 'UP'):
-		d = [i.copy() for i in current]
+		d = [i[:] for i in current]
 		d[empty[0]][empty[1]], d[empty[0] + 1][empty [1]] = d[empty[0] + 1][empty[1]], d[empty[0]][empty [1]]
 		nextStates.append(('DOWN', d, (empty[0] + 1, empty[1])))
 	#print(str(nextStates) + '\n')
