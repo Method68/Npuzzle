@@ -122,6 +122,10 @@ def IDA(width, gameboard, finalboard, g, current):
 
     for sibling in getNextStates(width, gameboard):
         tmp = IDA(width, sibling[0], finalboard, g + 1, current)
+        print ("sibling[0]")
+        print (sibling[0])
+        print ("sibling[1]")
+        print (sibling[1])
         # if j == 0:
             # print(sibling[1])
             # print(sibling[0])
