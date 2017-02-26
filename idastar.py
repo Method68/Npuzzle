@@ -40,6 +40,34 @@ def getNextStates (width, current):
     return (nextStates)
 
 def IDA_star(width, gameboard, finalboard):
+    # demi_fboard = finalboard
+    
+    # for raw in len(finalboard)
+
+    print "gameboard"
+    print gameboard
+    print "finalboard"
+    print finalboard
+
+    demi_fboard1 = []
+    demi_fboard2 = []
+    i = 0
+    for raw in finalboard:
+        if (i < 2):
+            demi_fboard1.append(finalboard[i])
+        else:
+            demi_fboard2.append(finalboard[i])
+        i += 1
+
+    print "demi_fboard1"
+    print demi_fboard1
+    print "demi_fboard2"
+    print demi_fboard2
+
+
+    sys.exit()
+    
+
     current = manhattan(width, gameboard, finalboard)
     while(1):
         tmp = IDA(width, gameboard, finalboard, 0, current)
