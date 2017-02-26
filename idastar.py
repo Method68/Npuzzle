@@ -43,58 +43,59 @@ def getNextStates (width, current):
 
     return (nextStates)
 
-def IDA_star(width, gameboard, finalboard):
-    # demi_fboard = finalboard
-    
-    # for raw in len(finalboard)
-
-    # print ("gameboard")
-    # print (gameboard)
-    # print ("finalboard")
-    # print (finalboard)
-
-    # demi_fboard1 = []
-    # demi_fboard2 = []
-    # i = 0
-    # for raw in finalboard:
-    #     if (i < 2):
-    #         demi_fboard1.append(finalboard[i])
-    #     else:
-    #         demi_fboard2.append(finalboard[i])
-    #     i += 1
-
-    # print ("demi_fboard1")
-    # print (demi_fboard1)
-    # print ("demi_fboard2")
-    # print (demi_fboard2)
-
-    # i = 0
-    # tmpboard = []
-    # while (i < 2):
-    #     if (i == 0):
-    #         tmpboard = demi_fboard1
-    #     else:
-    #         tmpboard = demi_fboard2
-    #     print ("tmpboard")
-    #     print (tmpboard)
-    print (finalboard)
-
+def negative_board(finalboard, width):
     test = 0
     col = 0
     cmpt = 0
+    tmpboard = finalboard
     while (cmpt < (width*width)):
-        finalboard[col][test] = -1
+        tmpboard[col][test] = -1
         test += 1
         if test == width:
             test = 0
             col += 1
         cmpt += 1
-    finalboard[0] = [1,-1,-1,-1]
+    return tmpboard
+
+def nbr_of_neg(tmpboard, width):
+    cmpt = 0
+    match = 0
+    test = 0
+    col = 0
+    while (cmpt < (width*width)):
+        if tmpboard[col][test] != -1:
+            match += 1
+        test += 1
+        if test == width:
+            test = 0
+            col += 1
+        cmpt += 1
+    return match
+
+def IDA_star(width, gameboard, finalboard):
+    match = 0
     print ("finalboard")
     print (finalboard)
+    tmpboard = negative_board(finalboard, width)
+    print ("tmpboard")
+    print (tmpboard)
+    print ("finalboard")
+    print (finalboard)
+    index_neg_board = nbr_of_neg(tmpboard,width)
+    print ("index_neg_board")
+    print (index_neg_board)
+    tmpboard[index_neg_board] = finalboard[0]
+    print ("finalboard")
+    print (finalboard)
+    print ("tmpboard")
+    print (tmpboard)
+    print ("match")
+    print (match)
 
-    current = manhattan(width, gameboard, finalboard)
-    print current
+    current = manhattan(width, gameboard, finalboard, match)
+    print (gameboard)
+    print (current)
+
     sys.exit()
 
 
@@ -132,7 +133,7 @@ def IDA(width, gameboard, finalboard, g, current, status):
     sys.stdout.flush()
     i += 1
 
-    heuri = manhattan(width, gameboard, finalboard)
+    heuri = manhattan(width, gameboard, finalboard, match)
     f = g + heuri
     if f > current:
         return f
@@ -162,20 +163,20 @@ def IDA(width, gameboard, finalboard, g, current, status):
 
     for sibling in getNextStates(width, gameboard):
         tmp = IDA(width, sibling[0], finalboard, g + 1, current, status)
-        print ("\nNew Ida return")
-        print ("sibling[0]")
-        print (sibling[0])
-        print ("sibling[1]")
-        print (sibling[1])
-        # if j == 0:
-            # print(sibling[1])
-            # print(sibling[0])
-        print ("TMP")
-        print (tmp)
-        print ("allmoves")
-        print (allmoves)
-        print ("allmovesstring[::-1]")
-        print (allmovesstring[::-1])
+        # print ("\nNew Ida return")
+        # print ("sibling[0]")
+        # print (sibling[0])
+        # print ("sibling[1]")
+        # print (sibling[1])
+        # # if j == 0:
+        #     # print(sibling[1])
+        #     # print(sibling[0])
+        # print ("TMP")
+        # print (tmp)
+        # print ("allmoves")
+        # print (allmoves)
+        # print ("allmovesstring[::-1]")
+        # print (allmovesstring[::-1])
         if tmp == 1:
             allmoves += 1
             allmovesstring.append(sibling[1])
