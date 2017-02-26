@@ -137,15 +137,12 @@ def IDA(width, gameboard, finalboard, tmpboard, g, current, match):
 	sys.stdout.flush()
 	i += 1
 
-
-	match = 0
 	print ("tmpboard")
 	print (tmpboard)
 	print ("finalboard")
 	print (finalboard)
 	print ("gameboard")
 	print (gameboard)
-	match = nbr_of_neg(tmpboard,width)
 	print ("match")
 	print (match)
 	raw = int(match / width)
@@ -155,15 +152,15 @@ def IDA(width, gameboard, finalboard, tmpboard, g, current, match):
 	print ("col")
 	print (col)
 
-	if j == 0:    
-		tmpboard[raw][col] = finalboard[raw][col]
-		j += 1
+	tmpboard[raw][col] = finalboard[raw][col]
 	heuri = manhattan(width, gameboard, tmpboard, match)
 	f = g + heuri
 	
 	if f > current:
 		return f
-	if gameboard[0][0] == tmpboard[0][0]:
+
+	if gameboard[raw][col] == tmpboard[raw][col]:
+		match = nbr_of_neg(tmpboard,width)
 		return 1
 
 	minval = float('inf')
