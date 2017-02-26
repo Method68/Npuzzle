@@ -65,11 +65,14 @@ def IDA_star(width, gameboard, finalboard):
     print (demi_fboard2)
 
     i = 0
+    tmpboard = []
     while (i < 2):
         if (i == 0):
             tmpboard = demi_fboard1
         else:
             tmpboard = demi_fboard2
+        print ("tmpboard")
+        print (tmpboard)
         current = manhattan(width, gameboard, tmpboard)
         while(1):
             tmp = IDA(width, gameboard, tmpboard, 0, current)
