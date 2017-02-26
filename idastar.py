@@ -75,7 +75,7 @@ def IDA_star(width, gameboard, finalboard):
         print (tmpboard)
         current = manhattan(width, gameboard, tmpboard)
         while(1):
-            tmp = IDA(width, gameboard, tmpboard, 0, current)
+            tmp = IDA(width, gameboard, tmpboard, 0, current, i)
             if tmp == 1:
                 print ("allmoves")
                 print (allmoves)
@@ -96,7 +96,7 @@ def IDA_star(width, gameboard, finalboard):
     sys.exit()
 
 j = 0
-def IDA(width, gameboard, finalboard, g, current):
+def IDA(width, gameboard, finalboard, g, current, status):
     global allmoves
     global allmovesstring
     global i
@@ -115,13 +115,29 @@ def IDA(width, gameboard, finalboard, g, current):
     if f > current:
         return f
 
-    if gameboard == finalboard:
-        return 1
+    cmpt = 0
+    demi_fboard1 = []
+    for raw in gameboard:
+        if (cmpt < 2):
+            demi_fboard1.append(gameboard[cmpt])
+        cmpt += 1
+
+    demi_gameboard = []
+    if status == 1:
+        if gameboard == finalboard:
+            return 1
+    else:
+        tmpcmpt = 0
+        while tmpcmpt < 2:
+            demi_gameboard.append(gameboard[tmpcmpt])
+            tmpcmpt += 1
+        if demi_gameboard == finalboard:
+            return 1
 
     minval = float('inf')
 
     for sibling in getNextStates(width, gameboard):
-        tmp = IDA(width, sibling[0], finalboard, g + 1, current)
+        tmp = IDA(width, sibling[0], finalboard, g + 1, current, status)
         print ("sibling[0]")
         print (sibling[0])
         print ("sibling[1]")
