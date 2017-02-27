@@ -5,6 +5,7 @@ allmoves = 0
 i = 0
 allmovesstring = []
 lastmoves = []
+final_list_moves = []
 
 def getNextStates (width, current):
 	nextStates = []
@@ -108,12 +109,13 @@ def update_gameboard(gameboard, allmovesstring, width):
 		print (gameboard)
 
 		#Remove actual MOVES for the next block to solve the next block
+		final_list_moves.append(allmovesstring[0])
 		allmovesstring.pop(0)		
 		cmpt += 1
 
 def IDA_star(width, gameboard, finalboard):
 	match = 0
-	final_list_moves = []
+	global final_list_moves
 	final_all_moves = 0
 	tmpboard = negative_board(width)
 	match = nbr_of_neg(tmpboard,width)
@@ -130,30 +132,31 @@ def IDA_star(width, gameboard, finalboard):
 			# # TEST THIS
 			# # we need to find a way to solve the final list for the graphical interface
 			# #
-
-			# for stri in allmovesstring[::-1]:
+			# for stri in allmovesstring:
 			# 	final_list_moves.append(stri)
 			# final_all_moves += allmoves
-			# print ("final_list_moves")
-			# print (final_list_moves)
+			
+			print ("final_list_moves")
+			print (final_list_moves)
+
+			# Update gameboard before the next move otherwhise we always restart from 0
+			gameboard = update_gameboard(gameboard, allmovesstring[::-1], width)
+			match += 1
+			print ("\nFinal, One more block done inside gameboard !!!!")
+			print (gameboard)
 
 			# # 
 			# sys.exit()
 
 
-			# Update gameboard before the next move otherwhise we always restart from 0
-			gameboard = update_gameboard(gameboard, allmovesstring[::-1], width)
-			match += 1
-			print ("Final One more block gameboard !!!!")
-			print (gameboard)
 
 			if gameboard == finalboard:
 				print ("Win win winwin !!!!")
 				# The actual value of allmoves and allmovesstring are actually wrong
 				# print ("final_list_moves")
 				# print (final_list_moves)
-				# return final_all_moves, final_list_moves
-				return allmoves , allmovesstring
+				return final_all_moves, final_list_moves
+				# return allmoves , allmovesstring
 		elif tmp == float("inf"):
 			return 'Fail', 'Fail'
 		current = tmp    

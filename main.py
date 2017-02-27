@@ -13,7 +13,7 @@ from pygame.locals import *
 if not pygame.image.get_extended():
 		raise SystemExit("Sorry, extended image module required")
 
-class Rect(object):
+class Blocks(object):
 	"""__init__() functions as the class constructor"""
 	def __init__(self, fenetre=None, x=None, y=None, i=None):
 		print ("obj"+str(i))
@@ -43,12 +43,12 @@ def create_a_solvable_grid(width, squareside, allcase, allcase_order):
 		print ("Board Not Builded")
 		return None
 
-def first_draw(squareside, fenetre, rects):
+def first_draw(squareside, fenetre, blocks):
 	i = 0
 	while (i < (squareside*squareside)):
 		# block-body
-		utils.draw_block(rects, fenetre, i)
-		fenetre.blit(rects[i].body, (rects[i].x, rects[i].y))
+		utils.draw_block(blocks, fenetre, i)
+		fenetre.blit(blocks[i].body, (blocks[i].x, blocks[i].y))
 		pygame.display.update()
 		i += 1
 
@@ -70,8 +70,8 @@ def main():
 		ia_final_move = create_a_solvable_grid(width, squareside, allcase, allcase_order)
 		if ia_final_move:
 			solvable = ia_final_move
-		rects = []
-		rects = utils.build_board(allcase, squareside, rects, fenetre)
+		blocks = []
+		blocks = utils.build_board(allcase, squareside, blocks, fenetre)
 
 	pygame.init()
 	# fond = pygame.image.load("/home/gabba/tmp_trash/puzzle-654962_1920.jpg").convert()
@@ -81,7 +81,7 @@ def main():
 	index_move = 0
 	space = 0
 	#Display the grid before we start
-	first_draw(squareside, fenetre, rects)
+	first_draw(squareside, fenetre, blocks)
 
 	# Second loop To display player moves
 	while loop:
@@ -92,17 +92,17 @@ def main():
 				if event.key == K_SPACE:
 					space = 1
 				else:
-					rects = utils.key_hook(rects, event.key, squareside)
+					blocks = utils.key_hook(blocks, event.key, squareside)
 		#use space to see the next step
 		if space == 1:
-			utils.ia_move(ia_final_move, index_move, rects, squareside)
+			utils.ia_move(ia_final_move, index_move, blocks, squareside)
 			# display an background images
 			# fenetre.blit(fond, (0,0))
 			i = 0
 			while (i < (squareside*squareside)):
-				utils.draw_block(rects, fenetre, i)
+				utils.draw_block(blocks, fenetre, i)
 				i += 1
-			block0 = utils.get_block_zero(rects)
+			block0 = utils.get_block_zero(blocks)
 			fenetre.blit(block0.body, (block0.x, block0.y))
 			pygame.display.update()
 			# for fenetre font
