@@ -9,9 +9,7 @@ tabposy = 150
 class Rect(object):
 	"""__init__() functions as the class constructor"""
 	def __init__(self, fenetre=None, x=None, y=None, i=None):
-		print ("obj"+str(i))
 		if i == 0:
-			print ("i = 0")
 			self.color = (180, 205, 205)
 		else :
 			# self.color = (((i * 3)+150, (i * 4)+150, (i * 1)+150))
@@ -65,8 +63,6 @@ def build_board(index, squareside, rects, fenetre):
 	tmpx = tabposx
 	tmpy = tabposy
 	while (i < squareside*squareside):
-		# print (i)
-		# print (index[i])
 		rects.append(Rect(fenetre, tmpx, tmpy, index[i]))
 		if ((tmpx / ((squareside*blocksize - blocksize) + tabposx)) == 1.00):
 			tmpx = tabposx

@@ -1,5 +1,5 @@
 import random, time, sys
-from heuristic import manhattan
+from heuristic import manhattan, euclidian, chebyshev
 from heapq import heapify, heappush, heappop
 
 test = 0
@@ -34,26 +34,37 @@ def getNextStates (width, current, laststate):
 		d = [i[:] for i in current]
 		d[empty[0]][empty[1]], d[empty[0] + 1][empty [1]] = d[empty[0] + 1][empty[1]], d[empty[0]][empty [1]]
 		nextStates.append(('DOWN', d, (empty[0] + 1, empty[1])))
-	#print(str(nextStates) + '\n')
 	return (nextStates)
  
-def aStar (width, gameboard, finalboard):
-	current = (manhattan(width, gameboard, finalboard), 0, [], gameboard)
+def aStar (width, gameboard, finalboard, answers):
+	if answers == "\033[91mManhattan":
+		current = (manhattan(width, gameboard, finalboard, 1000), 0, [], gameboard)
+	elif answers == "\033[91mEuclidian":
+		current = (euclidian(width, gameboard, finalboard, 1000), 0, [], gameboard)
+	else:
+		current = (chebyshev(width, gameboard, finalboard, 1000), 0, [], gameboard)
 	stateTree = [current]
-	print("Estimate manhatan distance : " + str(current[0]))
 	heapify(stateTree)
 	i = 0
 	while (not current[-1] == finalboard):
+		####################
+		#load view in terminal
 		syms = ['\\', '|', '/', '-']
 		if i == 4:
 			i = 0
 		sys.stdout.write("\033[93m\b%s\033[0m"%syms[i])
 		sys.stdout.flush()
 		i += 1
+		####################
 		current = heappop(stateTree)
 		state = None
 		for elem in current[2]:
 			state = elem
 		for state in getNextStates(width, current[-1], state):
-			heappush(stateTree,  (manhattan(width, state[1], finalboard) + current[1] + 1, current[1] + 1, current[2] + [state[0]], state[1]))
+			if answers == "\033[91mManhattan":
+				heappush(stateTree,  (manhattan(width, state[1], finalboard, 1000) + current[1] + 1, current[1] + 1, current[2] + [state[0]], state[1]))
+			elif answers == "\033[91mEuclidian":
+				heappush(stateTree,  (euclidian(width, state[1], finalboard, 1000) + current[1] + 1, current[1] + 1, current[2] + [state[0]], state[1]))
+			else:
+				heappush(stateTree,  (chebyshev(width, state[1], finalboard, 1000) + current[1] + 1, current[1] + 1, current[2] + [state[0]], state[1]))
 	return (current[1], current[2])

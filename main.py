@@ -4,21 +4,20 @@ import random, os.path
 #Our stuff
 import core_solver
 import utils
+import inquirer
 
 #import basic pygame modules
 import pygame
 from pygame.locals import *
 
 #see if we can load more than standard BMP
-if not pygame.image.get_extended():
-		raise SystemExit("Sorry, extended image module required")
+# if not pygame.image.get_extended():
+# 		raise SystemExit("Sorry, extended image module required")
 
 class Rect(object):
 	"""__init__() functions as the class constructor"""
 	def __init__(self, fenetre=None, x=None, y=None, i=None):
-		print ("obj"+str(i))
 		if i == 0:
-			print ("i = 0")
 			self.color = (180, 205, 205)
 		else :
 			# self.color = (((i * 3)+150, (i * 4)+150, (i * 1)+150))
@@ -28,19 +27,17 @@ class Rect(object):
 		self.body = pygame.Surface((utils.blocksize,utils.blocksize))
 		self.body.fill(self.color)
 		self.number = str(i)
-		# print ("My number is")
-		# print (self.number)
 
-def create_a_solvable_grid(width, squareside, allcase, allcase_order):
+def create_a_solvable_grid(width, squareside, allcase, allcase_order, answers, algo):
 	finalboard = utils.set_board(allcase_order, width)
 	gameboard = utils.set_board(allcase, width)
 
-	solvable = core_solver.construct(squareside, gameboard, finalboard)
+	solvable = core_solver.construct(squareside, gameboard, finalboard, answers, algo)
 	if (solvable != None):
-		print ("Board Builded")
+		print ("\033[92mBoard Builded\033[0m")
 		return solvable
 	else:
-		print ("Board Not Builded")
+		print ("\033[91mBoard Not Builded\033[0m")
 		return None
 
 def first_draw(squareside, fenetre, rects):
@@ -55,8 +52,38 @@ def first_draw(squareside, fenetre, rects):
 def main():
 	loop = 1
 	fenetre = pygame.display.set_mode((800, 600), 0, 32)
-	squareside = input('\033[92mChoose size for Npuzzle: \n')
+	squareside = input('\033[92mChoose size for Npuzzle: \n\033[91m')
+	if (squareside.isdigit() == False or int(squareside) < 2):
+		return (print("\033[91mThis is not valid value for Npuzzle"))
+	print("\033[90m")
 	squareside = int(squareside)
+
+	####################
+	#Select heuristic
+	questions = [
+  		inquirer.List('heuristic',
+                message="\033[92mSelect heuristic",
+                choices=['\033[91mManhattan', '\033[91mEuclidian', '\033[91mChebyshev'],
+            ),
+		]
+	answers = inquirer.prompt(questions)
+	answers = answers["heuristic"]
+	#####################
+
+	#####################
+	#Select algo if squareside <= 3
+	algo = ''
+	if squareside <= 3:
+		questions = [
+  		inquirer.List('algo',
+                message="\033[92mSelect algorithm",
+                choices=['\033[91mAstar', '\033[91mIDAstar'],
+            ),
+		]
+		algo = inquirer.prompt(questions)
+		algo = algo["algo"]
+	#####################
+
 	width = squareside
 	solvable = None
 	
@@ -67,7 +94,7 @@ def main():
 		allcase_order.pop(0)
 		allcase_order.append(0)
 		allcase = random.sample(range(allvalue),allvalue)
-		ia_final_move = create_a_solvable_grid(width, squareside, allcase, allcase_order)
+		ia_final_move = create_a_solvable_grid(width, squareside, allcase, allcase_order, answers, algo)
 		if ia_final_move:
 			solvable = ia_final_move
 		rects = []
@@ -109,7 +136,7 @@ def main():
 			# pygame.display.flip()
 			index_move += 1
 			if index_move == len_move:
-				print ("WIN")
+				print ("\033[92mWIN")
 				break
 			space = 0
 if __name__ == '__main__': main()
