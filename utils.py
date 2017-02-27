@@ -6,7 +6,7 @@ blocksize = 50
 tabposx = 150
 tabposy = 150
 
-class Rect(object):
+class Block(object):
 	"""__init__() functions as the class constructor"""
 	def __init__(self, fenetre=None, x=None, y=None, i=None):
 		if i == 0:
@@ -20,14 +20,14 @@ class Rect(object):
 		self.body.fill(self.color)
 		self.number = str(i)
 
-def draw_block(rects, fenetre, i,):
-	fenetre.blit(rects[i].body, (rects[i].x, rects[i].y))
+def draw_block(blocks, fenetre, i,):
+	fenetre.blit(blocks[i].body, (blocks[i].x, blocks[i].y))
 	# block-border
-	pygame.draw.rect(fenetre, [238, 238, 224], (rects[i].x, rects[i].y, 50, 50), 1)
+	pygame.draw.rect(fenetre, [238, 238, 224], (blocks[i].x, blocks[i].y, 50, 50), 1)
 	#display number
 	myfont = pygame.font.SysFont("monospace", 15)
-	label = myfont.render(rects[i].number, 1, (1,1,1))
-	rects[i].body.blit(label, (15, 15))
+	label = myfont.render(blocks[i].number, 1, (1,1,1))
+	blocks[i].body.blit(label, (15, 15))
 
 def set_board(liste, width):
 	board = []
@@ -40,7 +40,7 @@ def set_board(liste, width):
 		board.append(new)
 	return board
 
-def ia_move(ia_final_move, index_move, rects, squareside):
+def ia_move(ia_final_move, index_move, blocks, squareside):
 	if ia_final_move[index_move] == 'UP':
 		key = K_UP
 	if ia_final_move[index_move] == 'DOWN':
@@ -49,7 +49,7 @@ def ia_move(ia_final_move, index_move, rects, squareside):
 		key = K_LEFT
 	if ia_final_move[index_move] == 'RIGHT':
 		key = K_RIGHT
-	rects = key_hook(rects, key, squareside)
+	blocks = key_hook(blocks, key, squareside)
 
 def get_block_zero(blocks):
 	block0 = blocks[0]
@@ -58,19 +58,19 @@ def get_block_zero(blocks):
 			block0 = block
 	return block0
 
-def build_board(index, squareside, rects, fenetre):
+def build_board(index, squareside, blocks, fenetre):
 	i = 0
 	tmpx = tabposx
 	tmpy = tabposy
 	while (i < squareside*squareside):
-		rects.append(Rect(fenetre, tmpx, tmpy, index[i]))
+		blocks.append(Block(fenetre, tmpx, tmpy, index[i]))
 		if ((tmpx / ((squareside*blocksize - blocksize) + tabposx)) == 1.00):
 			tmpx = tabposx
 			tmpy += blocksize
 		else:
 			tmpx += blocksize
 		i += 1
-	return rects
+	return blocks
 
 
 def checkborder(index, squareside, block0):
@@ -86,9 +86,9 @@ def checkborder(index, squareside, block0):
 			return 0
 	return 1	
 
-def swap_values(rectx, rects):
-	block0 = get_block_zero(rects)
-	for new_rect in rects:
+def swap_values(rectx, blocks):
+	block0 = get_block_zero(blocks)
+	for new_rect in blocks:
 		if rectx.number == new_rect.number:
 			tmpy = block0.y
 			block0.y = new_rect.y
@@ -96,43 +96,43 @@ def swap_values(rectx, rects):
 			tmpx = block0.x
 			block0.x = new_rect.x
 			new_rect.x = tmpx
-	return rects
+	return blocks
 
-def switch_rects(move, rects):
-	block0 = get_block_zero(rects)
-	for rect in rects:
+def switch_blocks(move, blocks):
+	block0 = get_block_zero(blocks)
+	for rect in blocks:
 		if move[1] == 'y':
 			if ((move[0] == '+') and ((block0.y + blocksize) == rect.y) and ((block0.x) == rect.x)):
-				rects = swap_values(rect, rects)
+				blocks = swap_values(rect, blocks)
 				break
 			elif ((move[0] == '-') and ((block0.y - blocksize) == rect.y) and ((block0.x) == rect.x)):
-				rects = swap_values(rect, rects)
+				blocks = swap_values(rect, blocks)
 				break
 		elif move[1] == 'x':
 			if ((move[0] == '+') and ((block0.x + blocksize) == rect.x) and ((block0.y) == rect.y)):
-				rects = swap_values(rect, rects)
+				blocks = swap_values(rect, blocks)
 				break
 			elif ((move[0] == '-') and ((block0.x - blocksize) == rect.x) and ((block0.y) == rect.y)):
-				rects = swap_values(rect, rects)
+				blocks = swap_values(rect, blocks)
 				break
-	return rects
+	return blocks
 
-def key_hook(rects, key, squareside):
-	block0 = get_block_zero(rects)
+def key_hook(blocks, key, squareside):
+	block0 = get_block_zero(blocks)
 	if key == K_DOWN:
 		print ("DOWN")
 		if (checkborder("+y", squareside, block0)):
-			rects = switch_rects("+y", rects)
+			blocks = switch_blocks("+y", blocks)
 	elif key == K_UP:
 		print ("UP")
 		if (checkborder("-y", squareside, block0)):
-			rects = switch_rects("-y", rects)
+			blocks = switch_blocks("-y", blocks)
 	elif key == K_RIGHT:
 		print ("RIGHT")
 		if (checkborder("+x", squareside, block0)):
-			rects = switch_rects("+x", rects)
+			blocks = switch_blocks("+x", blocks)
 	elif key == K_LEFT:
 		print ("LEFT")
 		if (checkborder("-x", squareside, block0)):
-			rects = switch_rects("-x", rects)
-	return rects
+			blocks = switch_blocks("-x", blocks)
+	return blocks

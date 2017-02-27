@@ -69,27 +69,18 @@ def update_gameboard(gameboard, allmovesstring, width):
 	len_upt = len(allmovesstring) + 1
 	cmpt = 0
 	while (cmpt < len_upt):
-
-		# Get the cell which contain 0
 		for i in range(width):
 			try:
 				case = gameboard[i].index(0)
 			except Exception as e:
 				continue
 			case= (i, case)
-	
-			# Store block0 position
 			raw = i
 			col = case[1]
 			break
-		# if all moves are done we exit
 		if cmpt == allmoves:
 			return gameboard
-
-		# check next move	
 		move = allmovesstring[0]
-
-		#SWAP
 		if (move == 'RIGHT'):
 			gameboard[raw][col + 1] , gameboard[raw][col] = gameboard[raw][col], gameboard[raw][col + 1]
 		elif (move == 'LEFT'):
@@ -98,7 +89,6 @@ def update_gameboard(gameboard, allmovesstring, width):
 			gameboard[raw - 1][col] , gameboard[raw][col] = gameboard[raw][col], gameboard[raw - 1][col]
 		elif (move == 'DOWN'):
 			gameboard[raw + 1][col] , gameboard[raw][col] = gameboard[raw][col], gameboard[raw + 1][col]
-		#Remove actual MOVES for the next block to solve the next block
 		final_list_moves.append(allmovesstring[0])
 		allmovesstring.pop(0)		
 		cmpt += 1
@@ -122,13 +112,6 @@ def IDA_star(width, gameboard, finalboard, answers):
 	while(1):
 		tmp = IDA(width, gameboard, finalboard, tmpboard, 1, current, match, laststate, answers)
 		if tmp == 1:
-			# # TEST THIS
-			# # we need to find a way to solve the final list for the graphical interface
-			# #
-			# for stri in allmovesstring:
-			# 	final_list_moves.append(stri)
-			# final_all_moves += allmoves
-			# Update gameboard before the next move otherwhise we always restart from 0
 			gameboard = update_gameboard(gameboard, allmovesstring[::-1], width)
 			print(gameboard)
 			match += 1
@@ -136,7 +119,6 @@ def IDA_star(width, gameboard, finalboard, answers):
 			if gameboard == finalboard:
 				for elem in final_list_moves:
 					final_all_moves += 1
-				# The actual value of allmoves and allmovesstring are actually wrong
 				return final_all_moves, final_list_moves, allstatesselected
 		elif tmp == float("inf"):
 			return 'Fail', 'Fail'

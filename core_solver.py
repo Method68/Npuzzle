@@ -93,7 +93,6 @@ def construct(width, gameboard, finalboard, answers, algo):
 
 	#Print time, number of move and all move to accomplite board
 	print("\n\033[91mTime : \033[0m" + str(round(time2 - time1, 3)) + "scd")
-	print("\033[91mAll states selected : \033[0m" + str(allstatesselected))
 	print("\033[91mNumber of move : \033[0m" + str(seqCount))
 	print('\033[91mAll move : \033[0m\033[92m' + str(sequence))
 	return sequence
