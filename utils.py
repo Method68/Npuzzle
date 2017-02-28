@@ -29,17 +29,6 @@ def draw_block(blocks, fenetre, i,):
 	label = myfont.render(blocks[i].number, 1, (1,1,1))
 	blocks[i].body.blit(label, (15, 15))
 
-def set_board(liste, width):
-	board = []
-	k = 0
-	for i in range(width):
-		new = []
-		for j in range(width):
-			new.append(liste[k])
-			k += 1
-		board.append(new)
-	return board
-
 def ia_move(ia_final_move, index_move, blocks, squareside):
 	if ia_final_move[index_move] == 'UP':
 		key = K_UP

@@ -5,6 +5,17 @@ from idastar import IDA_star
 from astar import aStar
 from heapq import heapify, heappush, heappop
 
+def set_board(liste, width):
+	board = []
+	k = 0
+	for i in range(width):
+		new = []
+		for j in range(width):
+			new.append(liste[k])
+			k += 1
+		board.append(new)
+	return board
+
 def loopOnBoardInversion(gameboardsimplearray, size):
 	i = 0
 	inversion = 0
@@ -57,6 +68,25 @@ def checkIfSolvable(gameboard):
 				return False
 			else:
 				return True
+
+def call_core(squareside, heuristic, algo):
+	solvable = None	
+	while (solvable == None):
+		allvalue = squareside * squareside
+		allcase_order = [x for x in range(0, allvalue)]
+		allcase_order.pop(0)
+		allcase_order.append(0)
+		allcase = random.sample(range(allvalue),allvalue)
+		finalboard = set_board(allcase_order, squareside)
+		gameboard = set_board(allcase, squareside)
+		solvable = construct(squareside, gameboard, finalboard, heuristic, algo)
+		if (solvable != None):
+			print ("\033[92mBoard Builded\033[0m")
+			break
+		else:
+			print ("\033[91mBoard Not Builded\033[0m")
+	return solvable, allcase
+
 
 def construct(width, gameboard, finalboard, answers, algo):
 	#Board with random value
