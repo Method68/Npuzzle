@@ -32,8 +32,17 @@ class GameMenu():
 			posy = (self.scr_height / 2) - (t_h / 2) + (index * height)
 
 			self.items.append([item, label, (width, height), (posx, posy)])
- 
+
+	squareside = 2
+	heursticselected = ''
+	algo = ''
+	gamechoice = ''
 	def run(self):
+		global squareside
+		global heursticselected
+		global algo
+		global gamechoice
+
 		mainloop = True
 		choice = self.items[0][0]
 		choice_value = 0
@@ -52,7 +61,7 @@ class GameMenu():
 				if event.type == KEYDOWN:
 					if event.key == K_SPACE:
 						mainloop = False
-						print choice_value
+						print (choice_value)
 					if event.key == K_UP and choice_value > 0:
 						choice_value -= 1
 						choice = self.items[choice_value][0]
@@ -62,19 +71,110 @@ class GameMenu():
 					if event.key == 13:
 						validate = 1
 
-			if validate == 1 and choice == 'Solo':
-				print ("createa new submenue:")
-				print (choice)
-				break
-			elif validate == 1 and choice == 'Submenu':
+			if validate == 1 and choice == 'IA':
+				gamechoice = 'ia'
 				tmpitem = self.items
-				sub = GameMenu(self.screen, ('Start2', 'Submenu', 'Return', 'Quit'))
-				heuristic, algo, squareside = sub.run()
+				sub = GameMenu(self.screen, ('2x2', '3x3', '4x4', '5x5', 'Back'))
+				sub.run()
 				self.items = tmpitem
 				mainloop = 0
 				break
+
+			elif validate == 1 and choice == 'Solo':
+				gamechoice = 'solo'
+				tmpitem = self.items
+				sub = GameMenu(self.screen, ('2x2', '3x3', '4x4', '5x5', 'Back'))
+				sub.run()
+				self.items = tmpitem
+				mainloop = 0
+				break
+
+			elif validate == 1 and (choice == '2x2' or choice == '3x3' or choice == '4x4' or choice == '5x5' or choice == 'Back'):
+				if choice == 'Back':
+					choice = 'Menu'
+				elif gamechoice == 'ia':
+					if choice == '2x2':
+						squareside = 2
+					elif choice == '3x3':
+						squareside = 3
+					elif choice == '4x4':
+						squareside = 4
+					elif choice == '5x5':
+						squareside = 5
+					tmpitem = self.items
+					sub = GameMenu(self.screen, ('Manhattan Distance', 'Euclidian Distance', 'Chebyshev Distance', 'Back'))
+					sub.run()
+					self.items = tmpitem
+					mainloop = 0
+					break
+				else:
+					heursticselected = ''
+					algo = ''
+					if choice == '2x2':
+						squareside = 2
+						return heursticselected, algo, squareside
+					elif choice == '3x3':
+						squareside = 3
+						return heursticselected, algo, squareside
+					elif choice == '4x4':
+						squareside = 4
+						return heursticselected, algo, squareside
+					elif choice == '5x5':
+						squareside = 5
+						return heursticselected, algo, squareside
+
+			elif validate == 1 and (choice == 'Manhattan Distance' or choice == 'Euclidian Distance' or choice == 'Chebyshev Distance' or choice == 'Back'):
+				if choice == 'Back':
+					choice = 'Menu'
+				elif squareside < 4:
+					if choice == 'Manhattan Distance':
+						heursticselected = 'Manhattan'
+					elif choice == 'Euclidian Distance':
+						heursticselected = 'Euclidian'
+					elif choice == 'Chebyshev Distance':
+						heursticselected = 'Chebyshev'
+					tmpitem = self.items
+					sub = GameMenu(self.screen, ('Astar', 'IDAstar', 'Back'))
+					sub.run()
+					self.items = tmpitem
+					mainloop = 0
+					break
+				else:
+					if choice == 'Manhattan Distance':
+						heursticselected = 'Manhattan'
+						algo = 'IDAstar'
+						return heursticselected, algo, squareside
+					elif choice == 'Euclidian Distance':
+						heursticselected = 'Euclidian'
+						algo = 'IDAstar'
+						return heursticselected, algo, squareside
+					elif choice == 'Chebyshev Distance':
+						heursticselected = 'Chebyshev'
+						algo = 'IDAstar'
+						return heursticselected, algo, squareside
+
+			elif validate == 1 and (choice == 'Astar' or choice == 'IDAstar' or choice == 'Back'):
+				if choice == 'Back':
+					choice = 'Menu'
+				else:
+					if choice == 'Astar':
+						algo = 'Astar'
+						return heursticselected, algo, squareside
+					elif choice == 'IDAstar':
+						algo = 'IDAstar'
+						return heursticselected, algo, squareside
+
+			elif validate == 1 and choice == 'Menu':
+				tmpitem = self.items
+				sub = GameMenu(self.screen, ('IA', 'Solo', 'Quit'))
+				sub.run()
+				self.items = tmpitem
+				mainloop = 0
+				break
+
 			elif validate == 1 and choice == 'Return':
 				return 'Manhattan', 'IDAstar', 2
+
 			elif validate == 1 and choice == 'Quit':
 				sys.exit()
 
@@ -83,12 +183,8 @@ class GameMenu():
 			for name, label, (width, height), (posx, posy) in self.items:
 				self.screen.blit(label, (posx, posy))
 				if name == choice:
-					self.screen.blit(self.font.render(('X'), 1, (255,0,0)), (posx + 100, posy))
+					self.screen.blit(self.font.render(('X'), 1, (255,0,0)), (200, posy))
 			pygame.display.flip()
 
 		#get the rigth value
-		heuristic = 'Manhattan'
-		algo = 'IDAstar'
-		squareside = 2
-		gamemode = 'ia'
-		return heuristic, algo, squareside, gamemode
+		return heursticselected, algo, squareside, gamechoice

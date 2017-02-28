@@ -37,9 +37,9 @@ def getNextStates (width, current, laststate):
 	return (nextStates)
  
 def aStar (width, gameboard, finalboard, answers):
-	if answers == "\033[91mManhattan":
+	if answers == "Manhattan":
 		current = (manhattan(width, gameboard, finalboard, 1000), 0, [], gameboard)
-	elif answers == "\033[91mEuclidian":
+	elif answers == "Euclidian":
 		current = (euclidian(width, gameboard, finalboard, 1000), 0, [], gameboard)
 	else:
 		current = (chebyshev(width, gameboard, finalboard, 1000), 0, [], gameboard)
@@ -61,9 +61,9 @@ def aStar (width, gameboard, finalboard, answers):
 		for elem in current[2]:
 			state = elem
 		for state in getNextStates(width, current[-1], state):
-			if answers == "\033[91mManhattan":
+			if answers == "Manhattan":
 				heappush(stateTree,  (manhattan(width, state[1], finalboard, 1000) + current[1] + 1, current[1] + 1, current[2] + [state[0]], state[1]))
-			elif answers == "\033[91mEuclidian":
+			elif answers == "Euclidian":
 				heappush(stateTree,  (euclidian(width, state[1], finalboard, 1000) + current[1] + 1, current[1] + 1, current[2] + [state[0]], state[1]))
 			else:
 				heappush(stateTree,  (chebyshev(width, state[1], finalboard, 1000) + current[1] + 1, current[1] + 1, current[2] + [state[0]], state[1]))

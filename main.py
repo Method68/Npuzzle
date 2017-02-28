@@ -27,11 +27,17 @@ def menu_terminal(squareside):
 		]
 	heuristic = inquirer.prompt(questions)
 	heuristic = heuristic["heuristic"]
+	if heuristic == '\033[91mEuclidian':
+		heuristic = "Euclidian"
+	elif heuristic == '\033[91mManhattan':
+		heuristic = "Manhattan"
+	else:
+		heuristic = "Chebyshev"
 	#####################
 
 	#####################
 	#Select algo if squareside <= 3
-	algo = ''
+	algo = 'IDAstar'
 	if squareside <= 3:
 		questions = [
 		inquirer.List('algo',
@@ -41,6 +47,10 @@ def menu_terminal(squareside):
 		]
 		algo = inquirer.prompt(questions)
 		algo = algo["algo"]
+		if algo == '\033[91mAstar':
+			algo = 'Astar'
+		else:
+			algo = 'IDAstar'
 	#####################
 	return heuristic, algo
 
@@ -48,30 +58,47 @@ def menu_terminal(squareside):
 def main():
 	squareside = 0
 	while 42:
-		ginterface = raw_input('\033[92mDo you want a Graphical interface for Npuzzle: \n Default: No\nYes/No:\033[91m')
-		if ginterface == "y" or ginterface == "yes":
-			ginterface = 1
+		#####################
+		#Select interface Yes, No
+		questions = [
+		inquirer.List('interface',
+				message="\033[92mDo you want a Graphical interface for Npuzzle:",
+				choices=['\033[91mYes', '\033[91mNo'],
+			),
+		]
+		interface = inquirer.prompt(questions)
+		interface = interface["interface"]
+		#####################
+		if interface == "\033[91mYes":
+			interface = 1
 			break
-		if ginterface == "no" or ginterface == "n":
-			ginterface = 0
+		else:
+			interface = 0
 			break
-	if ginterface != 1:
+	if interface != 1:
 		print("\033[90m")
-		squareside = int(input('\033[92mChoose size for Npuzzle: \n\033[91m'))
+		squareside = input('\033[92mChoose size for Npuzzle: \n\033[91m')
+		#####################
+		#Ce check est obligatoire sinon tu peux balance une string ....
+		if squareside.isdigit() == False or int(squareside) < 2:
+			return(print('\033[91mBad value select int > 1'))
+		#####################
+		squareside = int(squareside)
 		print("\033[90m")
 		heuristic, algo = menu_terminal(squareside)
+		gamemode = 'ia'
 	# Comment this else if you don't want to go in the menu
 	# 
 	else:
 		screen = pygame.display.set_mode((640, 480), 0, 32)
-		menu_items = ('Solo', 'Submenu', 'Quit')
+		menu_items = ('IA', 'Solo', 'Quit')
 		pygame.display.set_caption('Game Menu')
 		gm = GameMenu(screen, menu_items)
 		# return the choice enter in the menu
 		heuristic, algo, squareside, gamemode = gm.run()
 
-	ia_final_move, allcase = core_solver.call_core(squareside, heuristic, algo)
-	if ginterface == 1:
-		game.call_game(ia_final_move, squareside, allcase)
+	ia_final_move, allcase = core_solver.call_core(squareside, heuristic, algo, gamemode)
+	if interface == 1:
+		game.call_game(ia_final_move, squareside, allcase, gamemode)
 
 if __name__ == '__main__': main()

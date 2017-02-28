@@ -2,9 +2,9 @@
 import pygame
 from pygame.locals import *
 
-blocksize = 50
-tabposx = 150
-tabposy = 150
+blocksize = 100
+tabposx = 50
+tabposy = 50
 
 class Block(object):
 	"""__init__() functions as the class constructor"""
@@ -23,9 +23,9 @@ class Block(object):
 def draw_block(blocks, fenetre, i,):
 	fenetre.blit(blocks[i].body, (blocks[i].x, blocks[i].y))
 	# block-border
-	pygame.draw.rect(fenetre, [238, 238, 224], (blocks[i].x, blocks[i].y, 50, 50), 1)
+	pygame.draw.rect(fenetre, [238, 238, 224], (blocks[i].x, blocks[i].y, 100, 100), 1)
 	#display number
-	myfont = pygame.font.SysFont("monospace", 15)
+	myfont = pygame.font.SysFont("monospace", 20)
 	label = myfont.render(blocks[i].number, 1, (1,1,1))
 	blocks[i].body.blit(label, (15, 15))
 
@@ -109,19 +109,15 @@ def switch_blocks(move, blocks):
 def key_hook(blocks, key, squareside):
 	block0 = get_block_zero(blocks)
 	if key == K_DOWN:
-		print ("DOWN")
 		if (checkborder("+y", squareside, block0)):
 			blocks = switch_blocks("+y", blocks)
 	elif key == K_UP:
-		print ("UP")
 		if (checkborder("-y", squareside, block0)):
 			blocks = switch_blocks("-y", blocks)
 	elif key == K_RIGHT:
-		print ("RIGHT")
 		if (checkborder("+x", squareside, block0)):
 			blocks = switch_blocks("+x", blocks)
 	elif key == K_LEFT:
-		print ("LEFT")
 		if (checkborder("-x", squareside, block0)):
 			blocks = switch_blocks("-x", blocks)
 	return blocks

@@ -69,7 +69,7 @@ def checkIfSolvable(gameboard):
 			else:
 				return True
 
-def call_core(squareside, heuristic, algo):
+def call_core(squareside, heuristic, algo, gamemode):
 	solvable = None	
 	while (solvable == None):
 		allvalue = squareside * squareside
@@ -79,7 +79,7 @@ def call_core(squareside, heuristic, algo):
 		allcase = random.sample(range(allvalue),allvalue)
 		finalboard = set_board(allcase_order, squareside)
 		gameboard = set_board(allcase, squareside)
-		solvable = construct(squareside, gameboard, finalboard, heuristic, algo)
+		solvable = construct(squareside, gameboard, finalboard, heuristic, algo, gamemode)
 		if (solvable != None):
 			print ("\033[92mBoard Builded\033[0m")
 			break
@@ -88,7 +88,7 @@ def call_core(squareside, heuristic, algo):
 	return solvable, allcase
 
 
-def construct(width, gameboard, finalboard, answers, algo):
+def construct(width, gameboard, finalboard, answers, algo, gamemode):
 	#Board with random value
 	print("\n\033[95mGAME BOARD\033[0m")
 	posrow = 0
@@ -106,23 +106,27 @@ def construct(width, gameboard, finalboard, answers, algo):
 		print("\n\033[91mThis game board is unsolvable !\033[90m")
 		return None
 	#Call A star, time instentiation
-	if answers == "\033[91mManhattan":
-		print("\033[91mManhattan distance : \033[0m" + str(manhattan(width,gameboard,finalboard,1000)))
-	elif answers == "\033[91mEuclidian":
-		print("\033[91mEuclidian distance : \033[0m" + str(euclidian(width,gameboard,finalboard,1000)))
-	else:
-		print("\033[91mChebyshev distance : \033[0m" + str(chebyshev(width,gameboard,finalboard,1000)))
-	print("\n\033[95mprocessing : \033[0m")
-	time1 = time.time()
-	if algo == "\033[91mAstar":
-		seqCount, sequence = aStar(width, gameboard, finalboard, answers)
-	else:
-		seqCount, sequence, allstatesselected = IDA_star(width, gameboard, finalboard, answers)
-	#Time finished A star
-	time2 = time.time()
+	if gamemode == 'ia':
+		if answers == "Manhattan":
+			print("\033[91mManhattan distance : \033[0m" + str(manhattan(width,gameboard,finalboard,1000)))
+		elif answers == "Euclidian":
+			print("\033[91mEuclidian distance : \033[0m" + str(euclidian(width,gameboard,finalboard,1000)))
+		else:
+			print("\033[91mChebyshev distance : \033[0m" + str(chebyshev(width,gameboard,finalboard,1000)))
+		print("\n\033[95mprocessing : \033[0m")
+		time1 = time.time()
+		if algo == "Astar":
+			print('\033[91mAlgorythm selected : \033[0m' + str(algo))
+			seqCount, sequence = aStar(width, gameboard, finalboard, answers)
+		else:
+			print('\033[91mAlgorythm selected : \033[0m' + str(algo))
+			seqCount, sequence, allstatesselected = IDA_star(width, gameboard, finalboard, answers)
+		#Time finished A star
+		time2 = time.time()
 
-	#Print time, number of move and all move to accomplite board
-	print("\n\033[91mTime : \033[0m" + str(round(time2 - time1, 3)) + "scd")
-	print("\033[91mNumber of move : \033[0m" + str(seqCount))
-	print('\033[91mAll move : \033[0m\033[92m' + str(sequence))
-	return sequence
+		#Print time, number of move and all move to accomplite board
+		print("\n\033[91mTime : \033[0m" + str(round(time2 - time1, 3)) + "scd")
+		print("\033[91mNumber of move : \033[0m" + str(seqCount))
+		print('\033[91mAll move : \033[0m\033[92m' + str(sequence))
+		return sequence
+	return ''

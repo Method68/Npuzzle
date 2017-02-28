@@ -6,6 +6,40 @@ from utils import Block
 # 
 # Main loop work in progress
 # 
+
+def main_loop_solo(squareside, fenetre, blocks):
+	index_move = 0
+	loop = 1
+	space = 0
+	ia_final_move = 0
+	move = []
+	movelen = 0
+	while loop:
+		for event in pygame.event.get():
+			if event.type == KEYDOWN:
+				if event.key == 273:
+					move.append('UP')
+				elif event.key == 274:
+					move.append('DOWN')
+				elif event.key == 276:
+					move.append('LEFT')
+				elif event.key == 275:
+					move.append('RIGHT')
+				movelen = 1
+			elif event.type == QUIT or (event.type == KEYDOWN and event.key == K_ESCAPE):
+				loop = 0
+		if movelen == 1 and len(move) > 0:
+			utils.ia_move(move, 0, blocks, squareside)
+			i = 0
+			while (i < (squareside*squareside)):
+				utils.draw_block(blocks, fenetre, i)
+				i += 1
+			block0 = utils.get_block_zero(blocks)
+			fenetre.blit(block0.body, (block0.x, block0.y))
+			pygame.display.update()
+			lenmove = 0
+			move = []
+
 def main_loop(ia_final_move, squareside, fenetre, blocks):
 	len_move = len(ia_final_move)
 	index_move = 0
@@ -18,8 +52,6 @@ def main_loop(ia_final_move, squareside, fenetre, blocks):
 			if event.type == KEYDOWN:
 				if event.key == K_SPACE:
 					space = 1
-				else:
-					blocks = utils.key_hook(blocks, event.key, squareside)
 		#use space to see the next step
 		if space == 1 and len_move > 0:
 			utils.ia_move(ia_final_move, index_move, blocks, squareside)
@@ -48,7 +80,7 @@ def first_draw(squareside, fenetre, blocks):
 		pygame.display.update()
 		i += 1
 
-def call_game(ia_final_move, squareside, allcase):
+def call_game(ia_final_move, squareside, allcase, gamemode):
 	fenetre = pygame.display.set_mode((800, 600), 0, 32)
 	blocks = []
 	blocks = utils.build_board(allcase, squareside, blocks, fenetre)
@@ -57,4 +89,7 @@ def call_game(ia_final_move, squareside, allcase):
 	# fenetre.blit(fond, (0,0))
 	pygame.display.flip()
 	first_draw(squareside, fenetre, blocks)
-	main_loop(ia_final_move, squareside, fenetre, blocks)
+	if gamemode == 'ia':
+		main_loop(ia_final_move, squareside, fenetre, blocks)
+	if gamemode == 'solo':
+		main_loop_solo(squareside, fenetre, blocks)

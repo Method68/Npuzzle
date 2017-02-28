@@ -102,9 +102,9 @@ def IDA_star(width, gameboard, finalboard, answers):
 	raw = int(match / width)
 	col = int(match % width)
 	tmpboard[raw][col] = finalboard[raw][col]
-	if answers == "\033[91mManhattan":
+	if answers == "Manhattan":
 		current = manhattan(width, gameboard, tmpboard, match)
-	elif answers == "\033[91mEuclidian":
+	elif answers == "Euclidian":
 		current = euclidian(width, gameboard, tmpboard, match)
 	else:
 		current = chebyshev(width, gameboard, tmpboard, match)
@@ -156,9 +156,9 @@ def IDA(width, gameboard, finalboard, tmpboard, g, current, match, laststate, an
 	raw = int(match / width)
 	col = int(match % width)
 	tmpboard[raw][col] = finalboard[raw][col]
-	if answers == "\033[91mManhattan":
+	if answers == "Manhattan":
 		heuri = manhattan(width, gameboard, tmpboard, match)
-	elif answers == "\033[91mEuclidian":
+	elif answers == "Euclidian":
 		heuri = euclidian(width, gameboard, tmpboard, match)
 	else:
 		heuri = chebyshev(width, gameboard, tmpboard, match)
