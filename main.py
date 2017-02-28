@@ -4,8 +4,8 @@ import random, os.path, inquirer
 #Our stuff
 import core_solver
 import game
-import gm
-from gm import GameMenu
+import menu
+from menu import GameMenu
 import utils
 from utils import Block
 #import basic pygame modules
@@ -64,9 +64,10 @@ def main():
 	# 
 	else:
 		screen = pygame.display.set_mode((640, 480), 0, 32)
-		menu_items = ('Start', 'Quit')
+		menu_items = ('Solo', 'Submenu', 'Quit')
 		pygame.display.set_caption('Game Menu')
 		gm = GameMenu(screen, menu_items)
+		# return the choice enter in the menu
 		heuristic, algo, squareside = gm.run()
 
 	ia_final_move, allcase = core_solver.call_core(squareside, heuristic, algo)
