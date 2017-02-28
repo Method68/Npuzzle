@@ -68,7 +68,7 @@ def main():
 		pygame.display.set_caption('Game Menu')
 		gm = GameMenu(screen, menu_items)
 		# return the choice enter in the menu
-		heuristic, algo, squareside = gm.run()
+		heuristic, algo, squareside, gamemode = gm.run()
 
 	ia_final_move, allcase = core_solver.call_core(squareside, heuristic, algo)
 	if ginterface == 1:

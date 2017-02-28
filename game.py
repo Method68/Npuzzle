@@ -21,7 +21,7 @@ def main_loop(ia_final_move, squareside, fenetre, blocks):
 				else:
 					blocks = utils.key_hook(blocks, event.key, squareside)
 		#use space to see the next step
-		if space == 1:
+		if space == 1 and len_move > 0:
 			utils.ia_move(ia_final_move, index_move, blocks, squareside)
 			# display an background images
 			# fenetre.blit(fond, (0,0))

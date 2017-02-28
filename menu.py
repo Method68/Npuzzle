@@ -67,8 +67,14 @@ class GameMenu():
 				print (choice)
 				break
 			elif validate == 1 and choice == 'Submenu':
-				sub = GameMenu(self.screen, ('Start2', 'Submenu', 'Quit'))
+				tmpitem = self.items
+				sub = GameMenu(self.screen, ('Start2', 'Submenu', 'Return', 'Quit'))
 				heuristic, algo, squareside = sub.run()
+				self.items = tmpitem
+				mainloop = 0
+				break
+			elif validate == 1 and choice == 'Return':
+				return 'Manhattan', 'IDAstar', 2
 			elif validate == 1 and choice == 'Quit':
 				sys.exit()
 
@@ -84,4 +90,5 @@ class GameMenu():
 		heuristic = 'Manhattan'
 		algo = 'IDAstar'
 		squareside = 2
-		return heuristic, algo, squareside
+		gamemode = 'ia'
+		return heuristic, algo, squareside, gamemode
