@@ -20,22 +20,22 @@ def getNextStates (width, current, state):
 		case = (i, case)
 		break
 
-	if (case[1] < (width - 1) and state != "LEFT"):
+	if (case[1] < (width - 1) and state != 'LEFT'):
 		a = [i[:] for i in current]
 		a[case[0]][case[1]], a[case[0]][case[1] + 1] = a[case[0]][case[1] + 1], a[case[0]][case[1]]
 		nextStates.append((a, 'RIGHT'))
 
-	if (case[1] > 0 and state != "RIGHT"):
+	if (case[1] > 0 and state != 'RIGHT'):
 		b = [i[:] for i in current]
 		b[case[0]][case[1]], b[case[0]][case[1] - 1] = b[case[0]][case[1] - 1], b[case[0]][case[1]]
 		nextStates.append((b, 'LEFT'))
 
-	if (case[0] > 0 and state != "DOWN"):
+	if (case[0] > 0 and state != 'DOWN'):
 		c = [i[:] for i in current]
 		c[case[0]][case[1]], c[case[0] - 1][case[1]] = c[case[0] - 1][case[1]], c[case[0]][case [1]]
 		nextStates.append((c, 'UP'))
 
-	if (case[0] < (width - 1) and state != "UP"):
+	if (case[0] < (width - 1) and state != 'UP'):
 		d = [i[:] for i in current]
 		d[case[0]][case[1]], d[case[0] + 1][case [1]] = d[case[0] + 1][case[1]], d[case[0]][case [1]]
 		nextStates.append((d, 'DOWN'))

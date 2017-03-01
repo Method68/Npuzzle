@@ -37,11 +37,16 @@ class GameMenu():
 	heursticselected = ''
 	algo = ''
 	gamechoice = ''
+	lastchoice = ''
+	backto = ''
+
 	def run(self):
 		global squareside
 		global heursticselected
 		global algo
 		global gamechoice
+		global lastchoice
+		global backto
 
 		mainloop = True
 		choice = self.items[0][0]
@@ -73,6 +78,8 @@ class GameMenu():
 
 			if validate == 1 and choice == 'IA':
 				gamechoice = 'ia'
+				lastchoice = 'IA'
+				backto = 'Menu'
 				tmpitem = self.items
 				sub = GameMenu(self.screen, ('2x2', '3x3', '4x4', '5x5', 'Back'))
 				sub.run()
@@ -82,6 +89,8 @@ class GameMenu():
 
 			elif validate == 1 and choice == 'Solo':
 				gamechoice = 'solo'
+				lastchoice = 'Solo'
+				backto = 'Menu'
 				tmpitem = self.items
 				sub = GameMenu(self.screen, ('2x2', '3x3', '4x4', '5x5', 'Back'))
 				sub.run()
@@ -89,10 +98,11 @@ class GameMenu():
 				mainloop = 0
 				break
 
-			elif validate == 1 and (choice == '2x2' or choice == '3x3' or choice == '4x4' or choice == '5x5' or choice == 'Back'):
+			elif validate == 1 and (choice == '2x2' or choice == '3x3' or choice == '4x4' or choice == '5x5' or (choice == 'Back' and backto == 'Menu')):
 				if choice == 'Back':
 					choice = 'Menu'
 				elif gamechoice == 'ia':
+					backto = 'IA'
 					if choice == '2x2':
 						squareside = 2
 					elif choice == '3x3':
@@ -123,10 +133,11 @@ class GameMenu():
 						squareside = 5
 						return heursticselected, algo, squareside
 
-			elif validate == 1 and (choice == 'Manhattan Distance' or choice == 'Euclidian Distance' or choice == 'Chebyshev Distance' or choice == 'Back'):
+			elif validate == 1 and (choice == 'Manhattan Distance' or choice == 'Euclidian Distance' or choice == 'Chebyshev Distance' or (choice == 'Back' and backto == 'IA')):
 				if choice == 'Back':
-					choice = 'Menu'
+					choice = 'IA'
 				elif squareside < 4:
+					backto = 'Manhattan Distance'
 					if choice == 'Manhattan Distance':
 						heursticselected = 'Manhattan'
 					elif choice == 'Euclidian Distance':
@@ -153,9 +164,9 @@ class GameMenu():
 						algo = 'IDAstar'
 						return heursticselected, algo, squareside
 
-			elif validate == 1 and (choice == 'Astar' or choice == 'IDAstar' or choice == 'Back'):
+			elif validate == 1 and (choice == 'Astar' or choice == 'IDAstar' or (choice == 'Back' and backto == 'Manhattan Distance')):
 				if choice == 'Back':
-					choice = 'Menu'
+					choice = '2x2'
 				else:
 					if choice == 'Astar':
 						algo = 'Astar'

@@ -2,6 +2,8 @@ import pygame
 from pygame.locals import *
 import utils
 from utils import Block
+import menu
+from menu import GameMenu
 
 # 
 # Main loop work in progress

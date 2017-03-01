@@ -1,7 +1,8 @@
 #!/usr/bin/env python
-import random, os.path, inquirer
+import random, os.path, inquirer, os
 
 #Our stuff
+from  tkinter import *
 import core_solver
 import game
 import menu
@@ -55,8 +56,22 @@ def menu_terminal(squareside):
 	return heuristic, algo
 
 
-def main():
+def main(argv):
 	squareside = 0
+	###################
+	#for read file
+	#filegameboard = ''
+	#if argv != None:
+	#	filename = argv
+	#	def file_read(file):
+	#		rfile = file.readlines()
+	#		if len(rfile) > 1:
+	#			print('\033[91mExemple of valid board on same line : [[1,2,3],[4,5,6],[7,8,0]]')
+	#			exit()
+	#		else:
+	#			filegameboard = rfile
+	#	file = file_read(open(filename, 'r'))
+
 	while 42:
 		#####################
 		#Select interface Yes, No
@@ -101,4 +116,11 @@ def main():
 	if interface == 1:
 		game.call_game(ia_final_move, squareside, allcase, gamemode)
 
-if __name__ == '__main__': main()
+if __name__ == '__main__':
+	if len(sys.argv) == 1:
+		main(None)
+	elif len(sys.argv) == 2:
+		main(sys.argv[1])
+	else:
+		print('\033[91mBad number of argument !')
+		exit()
