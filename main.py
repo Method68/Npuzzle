@@ -55,22 +55,42 @@ def menu_terminal(squareside):
 	#####################
 	return heuristic, algo
 
+def file_read(file):
+	filegameboard = []
+	rfile = file.readlines()
+	if len(rfile) == 0:
+		print('Error value doesn\'t exist')
+		exit()
+	numberelem = 0
+	for line in rfile:
+		numberelem += 1
+		line = line.replace('\n', '')
+		line = line.replace(' ', '')
+		line = line.replace('\t', '')
+		if line.isdigit():
+			filegameboard.append(int(line))
+	if numberelem < 4:
+		print('Error incorrect size of board')
+		exit()
+	test_squareroot_value = numberelem ** 0.5
+	decimal = str(test_squareroot_value - int(test_squareroot_value))[1:]
+	if decimal != '.0':
+		print('Error incorrect size of board')
+		exit()
+	for i in range(numberelem):
+		if i not in filegameboard:
+			print('Error value doesn\'t exist')
+			exit()
+	return filegameboard, int(test_squareroot_value)
+
 
 def main(argv):
 	squareside = 0
-	###################
-	#for read file
-	#filegameboard = ''
-	#if argv != None:
-	#	filename = argv
-	#	def file_read(file):
-	#		rfile = file.readlines()
-	#		if len(rfile) > 1:
-	#			print('\033[91mExemple of valid board on same line : [[1,2,3],[4,5,6],[7,8,0]]')
-	#			exit()
-	#		else:
-	#			filegameboard = rfile
-	#	file = file_read(open(filename, 'r'))
+	filegameboard = []
+	input_board = []
+	if argv != None:
+		filegameboard, squareside = file_read(open(argv, 'r'))
+		input_board = core_solver.set_board(filegameboard, squareside)
 
 	while 42:
 		#####################
@@ -91,15 +111,16 @@ def main(argv):
 			interface = 0
 			break
 	if interface != 1:
-		print("\033[90m")
-		squareside = input('\033[92mChoose size for Npuzzle: \n\033[91m')
-		#####################
-		#Ce check est obligatoire sinon tu peux balance une string ....
-		if squareside.isdigit() == False or int(squareside) < 2:
-			return(print('\033[91mBad value select int > 1'))
-		#####################
-		squareside = int(squareside)
-		print("\033[90m")
+		if (input_board == []):
+			print("\033[90m")
+			squareside = input('\033[92mChoose size for Npuzzle: \n\033[91m')
+			#####################
+			#Ce check est obligatoire sinon tu peux balance une string ....
+			if squareside.isdigit() == False or int(squareside) < 2:
+				return(print('\033[91mBad value select int > 1'))
+			#####################
+			squareside = int(squareside)
+			print("\033[90m")
 		heuristic, algo = menu_terminal(squareside)
 		gamemode = 'ia'
 	# Comment this else if you don't want to go in the menu
@@ -112,7 +133,9 @@ def main(argv):
 		# return the choice enter in the menu
 		heuristic, algo, squareside, gamemode = gm.run()
 
-	ia_final_move, allcase = core_solver.call_core(squareside, heuristic, algo, gamemode)
+	ia_final_move, allcase = core_solver.call_core(squareside, heuristic, algo, gamemode, input_board)
+	if input_board:
+		allcase = filegameboard
 	if interface == 1:
 		game.call_game(ia_final_move, squareside, allcase, gamemode)
 
