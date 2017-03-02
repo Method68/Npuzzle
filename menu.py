@@ -18,11 +18,12 @@ class GameMenu():
 		self.items = items
 		self.font = pygame.font.SysFont(font, font_size)
 		self.font_color = font_color
-
 		self.items = []
 		self.input_board = input_board
 		if input_board != []:
 			self.len_board_custom = len(input_board)
+		else:
+			self.len_board_custom = 0
 		for index, item in enumerate(items):
 			label = self.font.render(item, 1, font_color)
 

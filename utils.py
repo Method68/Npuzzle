@@ -1,6 +1,7 @@
 #import basic pygame modules
 import pygame
 from pygame.locals import *
+from resizeimage import resizeimage
 
 blocksize = 100
 tabposx = 50
@@ -19,6 +20,7 @@ class Block(object):
 		self.body = pygame.Surface((blocksize, blocksize))
 		self.body.fill(self.color)
 		self.number = str(i)
+		self.background = pygame.image.load("/Users/gkuma/git/Npuzzle/photo.jpg")
 
 def draw_block(blocks, fenetre, i,):
 	fenetre.blit(blocks[i].body, (blocks[i].x, blocks[i].y))

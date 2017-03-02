@@ -12,6 +12,7 @@ from utils import Block
 #import basic pygame modules
 import pygame
 from pygame.locals import *
+import image_slicer
 
 #see if we can load more than standard BMP
 # if not pygame.image.get_extended():
@@ -88,6 +89,7 @@ def main(argv):
 	squareside = 0
 	filegameboard = []
 	input_board = []
+
 	if argv != None:
 		filegameboard, squareside = file_read(open(argv, 'r'))
 		input_board = core_solver.set_board(filegameboard, squareside)
