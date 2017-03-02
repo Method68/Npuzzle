@@ -129,7 +129,7 @@ def main(argv):
 		screen = pygame.display.set_mode((640, 480), 0, 32)
 		menu_items = ('IA', 'Solo', 'Quit')
 		pygame.display.set_caption('Game Menu')
-		gm = GameMenu(screen, menu_items)
+		gm = GameMenu(screen, menu_items, input_board)
 		# return the choice enter in the menu
 		heuristic, algo, squareside, gamemode = gm.run()
 

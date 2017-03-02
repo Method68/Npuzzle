@@ -6,7 +6,7 @@ from pygame.locals import *
 pygame.init()
 
 class GameMenu():
-	def __init__(self, screen, items, bg_color=(0,0,0), font=None, font_size=30,
+	def __init__(self, screen, items, input_board, bg_color=(0,0,0), font=None, font_size=30,
 					font_color=(255, 255, 255)):
 		self.screen = screen
 		self.scr_width = self.screen.get_rect().width
@@ -20,6 +20,9 @@ class GameMenu():
 		self.font_color = font_color
 
 		self.items = []
+		self.input_board = input_board
+		if input_board != []:
+			self.len_board_custom = len(input_board)
 		for index, item in enumerate(items):
 			label = self.font.render(item, 1, font_color)
 
@@ -81,7 +84,16 @@ class GameMenu():
 				lastchoice = 'IA'
 				backto = 'Menu'
 				tmpitem = self.items
-				sub = GameMenu(self.screen, ('2x2', '3x3', '4x4', '5x5', 'Back'))
+				if self.len_board_custom:
+					if self.len_board_custom > 2 and self.len_board_custom < 6:
+						if self.len_board_custom == 3:
+							sub = GameMenu(self.screen, ('3x3', 'Back'), self.input_board)
+						elif self.len_board_custom == 4:
+							sub = GameMenu(self.screen, ('4x4', 'Back'), self.input_board)
+						elif self.len_board_custom == 5:
+							sub = GameMenu(self.screen, ('5x5', 'Back'), self.input_board)
+				else:
+					sub = GameMenu(self.screen, ('2x2', '3x3', '4x4', '5x5', 'Back'), self.input_board)
 				sub.run()
 				self.items = tmpitem
 				mainloop = 0
@@ -92,7 +104,16 @@ class GameMenu():
 				lastchoice = 'Solo'
 				backto = 'Menu'
 				tmpitem = self.items
-				sub = GameMenu(self.screen, ('2x2', '3x3', '4x4', '5x5', 'Back'))
+				if self.len_board_custom:
+					if self.len_board_custom > 2 and self.len_board_custom < 6:
+						if self.len_board_custom == 3:
+							sub = GameMenu(self.screen, ('3x3', 'Back'), self.input_board)
+						elif self.len_board_custom == 4:
+							sub = GameMenu(self.screen, ('4x4', 'Back'), self.input_board)
+						elif self.len_board_custom == 5:
+							sub = GameMenu(self.screen, ('5x5', 'Back'), self.input_board)
+				else:
+					sub = GameMenu(self.screen, ('2x2', '3x3', '4x4', '5x5', 'Back'), self.input_board)
 				sub.run()
 				self.items = tmpitem
 				mainloop = 0
@@ -112,7 +133,7 @@ class GameMenu():
 					elif choice == '5x5':
 						squareside = 5
 					tmpitem = self.items
-					sub = GameMenu(self.screen, ('Manhattan Distance', 'Euclidian Distance', 'Chebyshev Distance', 'Back'))
+					sub = GameMenu(self.screen, ('Manhattan Distance', 'Euclidian Distance', 'Chebyshev Distance', 'Back'), self.input_board)
 					sub.run()
 					self.items = tmpitem
 					mainloop = 0
@@ -145,7 +166,7 @@ class GameMenu():
 					elif choice == 'Chebyshev Distance':
 						heursticselected = 'Chebyshev'
 					tmpitem = self.items
-					sub = GameMenu(self.screen, ('Astar', 'IDAstar', 'Back'))
+					sub = GameMenu(self.screen, ('Astar', 'IDAstar', 'Back'), self.input_board)
 					sub.run()
 					self.items = tmpitem
 					mainloop = 0
@@ -177,7 +198,7 @@ class GameMenu():
 
 			elif validate == 1 and choice == 'Menu':
 				tmpitem = self.items
-				sub = GameMenu(self.screen, ('IA', 'Solo', 'Quit'))
+				sub = GameMenu(self.screen, ('IA', 'Solo', 'Quit'), self.input_board)
 				sub.run()
 				self.items = tmpitem
 				mainloop = 0
