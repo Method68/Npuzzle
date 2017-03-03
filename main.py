@@ -12,7 +12,11 @@ from utils import Block
 #import basic pygame modules
 import pygame
 from pygame.locals import *
-import image_slicer
+
+import sys
+
+from PIL import Image
+from resizeimage import resizeimage
 
 #see if we can load more than standard BMP
 # if not pygame.image.get_extended():
@@ -89,7 +93,6 @@ def main(argv):
 	squareside = 0
 	filegameboard = []
 	input_board = []
-
 	if argv != None:
 		filegameboard, squareside = file_read(open(argv, 'r'))
 		input_board = core_solver.set_board(filegameboard, squareside)
@@ -134,6 +137,11 @@ def main(argv):
 		gm = GameMenu(screen, menu_items, input_board)
 		# return the choice enter in the menu
 		heuristic, algo, squareside, gamemode = gm.run()
+
+	size = squareside*100
+	img = Image.open("/Users/gkuma/git/Npuzzle/photo.jpg").resize((size,size))
+	out = open("/Users/gkuma/git/Npuzzle/photo.jpg", "w")
+	img.save(out, "JPEG")
 
 	ia_final_move, allcase = core_solver.call_core(squareside, heuristic, algo, gamemode, input_board)
 	if input_board:

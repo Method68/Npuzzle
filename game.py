@@ -4,18 +4,24 @@ import utils
 from utils import Block
 import menu
 from menu import GameMenu
+import image_slicer
+from core_solver import set_finalboard ,set_board
 
-# 
-# Main loop work in progress
-# 
-
-def main_loop_solo(squareside, fenetre, blocks):
+def main_loop_solo(squareside, fenetre, blocks, fond):
 	index_move = 0
 	loop = 1
 	space = 0
 	ia_final_move = 0
-	move = []
 	movelen = 0
+	move = []
+	gameboard = []
+	for elem in blocks:
+		print (elem.number)
+		gameboard.append(int(elem.number))
+	gameboard = set_board(gameboard, squareside)
+	print ("gameboard")
+	print (gameboard)
+	final_board = set_finalboard(squareside)
 	while loop:
 		for event in pygame.event.get():
 			if event.type == KEYDOWN:
@@ -27,46 +33,76 @@ def main_loop_solo(squareside, fenetre, blocks):
 					move.append('LEFT')
 				elif event.key == 275:
 					move.append('RIGHT')
+				elif event.key == K_ESCAPE:
+					loop = 0 
 				movelen = 1
-			elif event.type == QUIT or (event.type == KEYDOWN and event.key == K_ESCAPE):
+			elif event.type == QUIT:
 				loop = 0
 		if movelen == 1 and len(move) > 0:
-			utils.ia_move(move, 0, blocks, squareside)
+			blocks, gameboard = utils.player_move(move, 0, blocks, squareside, gameboard)
+			case = None
+
+			for i in range(squareside):
+				try:
+					case = gameboard[i].index(0)
+				except Exception as e:
+					continue
+				case = (i, case)
+				break
+
+			if event.key == 273 and case[0] > 0:
+				gameboard[case[0]][case[1]], gameboard[case[0]-1][case[1]] = gameboard[case[0]-1][case[1]], gameboard[case[0]][case[1]]
+			elif event.key == 274 and case[0] < (squareside - 1):
+				gameboard[case[0]][case[1]], gameboard[case[0]+1][case[1]] = gameboard[case[0]+1][case[1]], gameboard[case[0]][case[1]]
+			elif event.key == 276 and case[1] > 0:
+				gameboard[case[0]][case[1]-1], gameboard[case[0]][case[1]] = gameboard[case[0]][case[1]], gameboard[case[0]][case[1]-1]
+			elif event.key == 275 and case[1] < (squareside - 1):
+				gameboard[case[0]][case[1]+1], gameboard[case[0]][case[1]] = gameboard[case[0]][case[1]], gameboard[case[0]][case[1]+1]
+			
 			i = 0
+			fenetre.blit(fond, (0,0))
 			while (i < (squareside*squareside)):
 				utils.draw_block(blocks, fenetre, i)
 				i += 1
 			block0 = utils.get_block_zero(blocks)
-			fenetre.blit(block0.body, (block0.x, block0.y))
-			pygame.display.update()
+			# fenetre.blit(block0.background, (block0.x, block0.y))
+			pygame.draw.rect(fenetre, [238, 0, 0], (block0.x, block0.y, 100, 100), 1)
+			pygame.display.flip()
 			lenmove = 0
 			move = []
+			print ("block")
+			print (gameboard)
+			if (gameboard == final_board):
+				print ("win")
+				break
 
-def main_loop(ia_final_move, squareside, fenetre, blocks):
+def main_loop(ia_final_move, squareside, fenetre, blocks, fond):
 	len_move = len(ia_final_move)
 	index_move = 0
 	loop = 1
 	space = 0
 	while loop:
 		for event in pygame.event.get():
-			if event.type == QUIT or (event.type == KEYDOWN and event.key == K_ESCAPE):
+			if event.type == QUIT:
 				loop = 0
 			if event.type == KEYDOWN:
 				if event.key == K_SPACE:
 					space = 1
+				elif event.key == K_ESCAPE:
+					loop = 0
 		#use space to see the next step
 		if space == 1 and len_move > 0:
 			utils.ia_move(ia_final_move, index_move, blocks, squareside)
-			# display an background images
 			fenetre.blit(fond, (0,0))
 			i = 0
 			while (i < (squareside*squareside)):
 				utils.draw_block(blocks, fenetre, i)
 				i += 1
 			block0 = utils.get_block_zero(blocks)
-			fenetre.blit(block0.body, (block0.x, block0.y))
-			pygame.display.update()
-			# for fenetre font
+			fenetre.blit(block0.background, (block0.x, block0.y))
+			pygame.draw.rect(fenetre, [238, 0, 0], (block0.x, block0.y, 100, 100), 1)
+
+			# pygame.display.update()
 			pygame.display.flip()
 			index_move += 1
 			if index_move == len_move:
@@ -78,23 +114,15 @@ def first_draw(squareside, fenetre, blocks):
 	i = 0
 	while (i < (squareside*squareside)):
 		utils.draw_block(blocks, fenetre, i)
-# 				#load the image to a surface
-# #create a rect half the width of the image
-# half_rect = pygame.rect(blocks.background.width/2, blocks.background.height/2)
-# #blit first half
-
-# fenetre.blit((0,0), half_rect, blocks.background)
-# #blit second half
-# fenetre.blit((image.width+10,0),half_rect, blocks.background)
-
-		fenetre.blit(blocks[i].body, (blocks[i].x, blocks[i].y))
+		fenetre.blit(blocks[i].background, (blocks[i].x, blocks[i].y))
+		pygame.draw.rect(fenetre, [238, 238, 224], (blocks[i].x, blocks[i].y, 100, 100), 1)
 		pygame.display.update()
 		i += 1
 
 def call_game(ia_final_move, squareside, allcase, gamemode):
 	fenetre = pygame.display.set_mode((800, 600), 0, 32)
-	tiles = image_slicer.slice('photo.jpg', 4, save=False)
-	image_slicer.save_tiles(tiles, directory='~/photo', prefix='slice', ext='jpg')
+	tiles = image_slicer.slice('/Users/gkuma/git/Npuzzle/photo.jpg', squareside*squareside, save=False)
+	image_slicer.save_tiles(tiles, directory='/Users/gkuma/git/Npuzzle/', prefix='')
 	blocks = []
 	blocks = utils.build_board(allcase, squareside, blocks, fenetre)
 	pygame.init()
@@ -103,6 +131,6 @@ def call_game(ia_final_move, squareside, allcase, gamemode):
 	pygame.display.flip()
 	first_draw(squareside, fenetre, blocks)
 	if gamemode == 'ia':
-		main_loop(ia_final_move, squareside, fenetre, blocks)
+		main_loop(ia_final_move, squareside, fenetre, blocks, fond)
 	if gamemode == 'solo':
-		main_loop_solo(squareside, fenetre, blocks)
+		main_loop_solo(squareside, fenetre, blocks, fond)

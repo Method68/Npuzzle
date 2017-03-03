@@ -16,7 +16,7 @@ def set_board(liste, width):
 		board.append(new)
 	return board
 
-def set_finalboard(liste, n):
+def set_finalboard(n):
 	m = [[0] * n for i in range(n)]
 	dx, dy = [0, 1, 0, -1], [1, 0, -1, 0]
 	x, y, c = 0, -1, 1
@@ -95,7 +95,7 @@ def call_core(squareside, heuristic, algo, gamemode, filegameboard):
 		allcase_order.pop(0)
 		allcase_order.append(0)
 		allcase = random.sample(range(allvalue),allvalue)
-		finalboard = set_finalboard(allcase_order, squareside)
+		finalboard = set_finalboard(squareside)
 		if not len(filegameboard):
 			gameboard = set_board(allcase, squareside)
 		else:
