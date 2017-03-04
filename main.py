@@ -142,8 +142,8 @@ def main(argv):
 			heuristic, algo, squareside, gamemode = gm.run()
 
 		size = squareside*100
-		img = Image.open("/home/gabba/Documents/pygame/Npuzzle/photo.jpg").resize((size,size))
-		out = open("/home/gabba/Documents/pygame/Npuzzle/photo.jpg", "w")
+		img = Image.open("/home/gabba/Downloads/photo.jpg").resize((size,size))
+		out = open("/home/gabba/Downloads/photo.jpg", "w")
 		img.save(out, "JPEG")
 
 		ia_final_move, allcase = core_solver.call_core(squareside, heuristic, algo, gamemode, input_board)

@@ -19,8 +19,6 @@ def display_nbr_move(fenetre, total_move):
 	fenetre.blit(label, (100, 100))
 	fenetre.blit(label2, (100, 120))
 
-
-
 def main_loop_solo(squareside, fenetre, blocks, fond):
 	index_move = 0
 	loop = 1
@@ -138,14 +136,14 @@ def first_draw(squareside, fenetre, blocks):
 		i += 1
 
 def call_game(ia_final_move, squareside, allcase, gamemode, fenetre):
-	tiles = image_slicer.slice('/home/gabba/Documents/pygame/Npuzzle/photo.jpg', squareside*squareside, save=False)
-	image_slicer.save_tiles(tiles, directory='/home/gabba/Documents/pygame/Npuzzle/', prefix='')
+	tiles = image_slicer.slice('/home/gabba/Downloads/photo.jpg', squareside*squareside, save=False)
+	image_slicer.save_tiles(tiles, directory='/home/gabba/Downloads/', prefix='')
 	replay = 1
 	while (replay == 1):
 		blocks = []
 		blocks = utils.build_board(allcase, squareside, blocks, fenetre)
 		# pygame.init()
-		fond = pygame.image.load("/home/gabba/Documents/pygame/Npuzzle/background.jpg")
+		fond = pygame.image.load("/home/gabba/Downloads/background.jpg")
 		fenetre.blit(fond, (0,0))
 		pygame.display.flip()
 		first_draw(squareside, fenetre, blocks)

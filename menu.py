@@ -59,7 +59,7 @@ class GameMenu():
 		posxy = self.items[0][3]
 		posx = posxy[0]
 		posy = posxy[1]
-		fond = pygame.image.load("/home/gabba/Documents/pygame/Npuzzle/background.jpg")
+		fond = pygame.image.load("/home/gabba/Downloads/background.jpg")
 		self.screen.blit(fond, (0,0))
 		self.screen.blit(self.font.render(('<='), 1, (230,230,230)), (posx + 100, posy))
 		while mainloop:
