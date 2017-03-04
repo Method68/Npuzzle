@@ -134,7 +134,7 @@ def main(argv):
 		# Comment this else if you don't want to go in the menu
 		# 
 		else:
-			fenetre = pygame.display.set_mode((640, 480), 0, 32)
+			fenetre = pygame.display.set_mode((800, 600), 0, 32)
 			menu_items = ('IA', 'Solo', 'Quit')
 			pygame.display.set_caption('Game Menu')
 			gm = GameMenu(fenetre, menu_items, input_board)

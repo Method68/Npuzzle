@@ -9,10 +9,23 @@ from replay import ReplayMenu
 import image_slicer
 from core_solver import set_finalboard ,set_board
 
+def display_nbr_move(fenetre, total_move):
+	# initialize font; must be called after 'pygame.init()' to avoid 'Font not Initialized' error
+	myfont = pygame.font.SysFont("monospace", 15)
+
+	# render text
+	label = myfont.render("Move Total", 1, (255,255,0))
+	label2 = myfont.render(str(total_move), 1, (255,255,0))
+	fenetre.blit(label, (100, 100))
+	fenetre.blit(label2, (100, 120))
+
+
+
 def main_loop_solo(squareside, fenetre, blocks, fond):
 	index_move = 0
 	loop = 1
 	space = 0
+	total_move = 0
 	ia_final_move = 0
 	movelen = 0
 	move = []
@@ -68,9 +81,11 @@ def main_loop_solo(squareside, fenetre, blocks, fond):
 				i += 1
 			block0 = utils.get_block_zero(blocks)
 			pygame.draw.rect(fenetre, [238, 0, 0], (block0.x, block0.y, 100, 100), 1)
+			display_nbr_move(fenetre, total_move)
 			pygame.display.flip()
 			lenmove = 0
 			move = []
+			total_move += 1
 			print ("block")
 			print (gameboard)
 			if (gameboard == final_board):
@@ -80,6 +95,7 @@ def main_loop_solo(squareside, fenetre, blocks, fond):
 def main_loop(ia_final_move, squareside, fenetre, blocks, fond):
 	len_move = len(ia_final_move)
 	index_move = 0
+	total_move = 0
 	loop = 1
 	space = 0
 	while loop:
@@ -102,7 +118,7 @@ def main_loop(ia_final_move, squareside, fenetre, blocks, fond):
 			block0 = utils.get_block_zero(blocks)
 			fenetre.blit(block0.background, (block0.x, block0.y))
 			pygame.draw.rect(fenetre, [238, 0, 0], (block0.x, block0.y, 100, 100), 1)
-
+			display_nbr_move(fenetre, total_move)
 			# pygame.display.update()
 			pygame.display.flip()
 			index_move += 1
@@ -110,6 +126,7 @@ def main_loop(ia_final_move, squareside, fenetre, blocks, fond):
 				print ("\033[92mWIN")
 				break
 			space = 0
+			total_move += 1
 
 def first_draw(squareside, fenetre, blocks):
 	i = 0
