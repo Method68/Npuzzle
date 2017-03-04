@@ -5,8 +5,8 @@ from resizeimage import resizeimage
 from core_solver import set_finalboard, set_board
 
 blocksize = 100
-tabposx = 50
-tabposy = 50
+tabposx = 200
+tabposy = 200
 
 class Block(object):
 	"""__init__() functions as the class constructor"""
@@ -91,9 +91,7 @@ def player_move(ia_final_move, index_move, blocks, squareside, new_gameboard):
 
 def get_block_zero(blocks):
 	for block in blocks:
-		print ("block.number = "+ str(block.number))
 		if block.iscursor == 1:
-			print ("ok")
 			block0 = block
 			break
 	return block0
@@ -113,34 +111,16 @@ def checkborder(index, squareside, block0):
 
 def swap_values(rectx, blocks, new_gameboard):
 	block0 = get_block_zero(blocks)
-	
-	print ("block0 : " +str(block0.number))
-
-	print ("block0 : " + str(block0.x)+" "+ str(block0.y)+" "+ str(block0.number))
 	for new_rect in blocks:
 		if rectx.x == new_rect.x and rectx.y == new_rect.y:
-			print ("new_rect : " + str(new_rect.x)+" "+ str(new_rect.y)+" "+ str(new_rect.number))
 			tmpy = block0.y
 			block0.y = new_rect.y
 			new_rect.y = tmpy
-
 			tmpx = block0.x
 			block0.x = new_rect.x
 			new_rect.x = tmpx
-
-			raw = int((new_rect.x-50)/100)
-			col = int((new_rect.y-50)%100)
-			print ("block0 : " + str(block0.x)+" "+ str(block0.y)+" "+ str(block0.number))
-			print ("new_rect : " + str(new_rect.x)+" "+ str(new_rect.y)+" "+ str(new_rect.number))
-
-	# block0raw = int((block0.x-50)/100)
-	# block0col = int((block0.y-50)%100)
-	# print ("new rect raw"+str(raw))
-	# print ("new rect col"+str(col))
-	# print ("block0 raw"+str(block0raw))
-	# print ("block0 col"+str(block0col))
-	# print (new_gameboard)
-	# new_gameboard[raw][col] , new_gameboard[block0raw][block0col] = new_gameboard[block0raw][block0col], new_gameboard[raw][col]
+			raw = int((new_rect.x-tabposx)/100)
+			col = int((new_rect.y-tabposy)%100)
 	new_gameboard = new_gameboard
 	return blocks, new_gameboard
 
@@ -150,20 +130,16 @@ def switch_blocks(move, blocks, new_gameboard):
 		if move[1] == 'x':
 			if ((move[0] == '+') and ((block0.x + blocksize) == rect.x) and (block0.y == rect.y)):
 				blocks, new_gameboard = swap_values(rect, blocks, new_gameboard)
-				print ("+x")
 				break
 			elif ((move[0] == '-') and ((block0.x - blocksize) == rect.x) and (block0.y == rect.y)):
 				blocks, new_gameboard = swap_values(rect, blocks, new_gameboard)
-				print ("-x")
 				break
 		elif move[1] == 'y':
 			if ((move[0] == '+') and ((block0.y + blocksize) == rect.y) and (block0.x == rect.x)):
 				blocks, new_gameboard = swap_values(rect, blocks, new_gameboard)
-				print ("+y")
 				break
 			elif ((move[0] == '-') and ((block0.y - blocksize) == rect.y) and (block0.x == rect.x)):
 				blocks, new_gameboard = swap_values(rect, blocks, new_gameboard)
-				print ("-y")
 				break
 	return blocks, new_gameboard
 

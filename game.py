@@ -67,7 +67,6 @@ def main_loop_solo(squareside, fenetre, blocks, fond):
 				utils.draw_block(blocks, fenetre, i)
 				i += 1
 			block0 = utils.get_block_zero(blocks)
-			# fenetre.blit(block0.background, (block0.x, block0.y))
 			pygame.draw.rect(fenetre, [238, 0, 0], (block0.x, block0.y, 100, 100), 1)
 			pygame.display.flip()
 			lenmove = 0
