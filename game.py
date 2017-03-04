@@ -4,6 +4,8 @@ import utils
 from utils import Block
 import menu
 from menu import GameMenu
+import replay
+from replay import ReplayMenu
 import image_slicer
 from core_solver import set_finalboard ,set_board
 
@@ -119,18 +121,27 @@ def first_draw(squareside, fenetre, blocks):
 		pygame.display.update()
 		i += 1
 
-def call_game(ia_final_move, squareside, allcase, gamemode):
-	fenetre = pygame.display.set_mode((800, 600), 0, 32)
-	tiles = image_slicer.slice('/Users/gkuma/git/Npuzzle/photo.jpg', squareside*squareside, save=False)
-	image_slicer.save_tiles(tiles, directory='/Users/gkuma/git/Npuzzle/', prefix='')
-	blocks = []
-	blocks = utils.build_board(allcase, squareside, blocks, fenetre)
-	pygame.init()
-	fond = pygame.image.load("/Users/gkuma/git/Npuzzle/background.jpg")
-	fenetre.blit(fond, (0,0))
-	pygame.display.flip()
-	first_draw(squareside, fenetre, blocks)
-	if gamemode == 'ia':
-		main_loop(ia_final_move, squareside, fenetre, blocks, fond)
-	if gamemode == 'solo':
-		main_loop_solo(squareside, fenetre, blocks, fond)
+def call_game(ia_final_move, squareside, allcase, gamemode, fenetre):
+	tiles = image_slicer.slice('/home/gabba/Documents/pygame/Npuzzle/photo.jpg', squareside*squareside, save=False)
+	image_slicer.save_tiles(tiles, directory='/home/gabba/Documents/pygame/Npuzzle/', prefix='')
+	replay = 1
+	while (replay == 1):
+		blocks = []
+		blocks = utils.build_board(allcase, squareside, blocks, fenetre)
+		# pygame.init()
+		fond = pygame.image.load("/home/gabba/Documents/pygame/Npuzzle/background.jpg")
+		fenetre.blit(fond, (0,0))
+		pygame.display.flip()
+		first_draw(squareside, fenetre, blocks)
+		if gamemode == 'ia':
+			main_loop(ia_final_move, squareside, fenetre, blocks, fond)
+		if gamemode == 'solo':
+			main_loop_solo(squareside, fenetre, blocks, fond)
+		menu_items = ('Replay', 'MainMenu', 'Quit')
+		pygame.display.set_caption('Replay')
+		replay_menu = ReplayMenu(fenetre, menu_items)
+		# return the choice enter in the menu
+		replay = replay_menu.run()
+	if replay == 2:
+		replay = 1
+	return replay

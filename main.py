@@ -2,7 +2,6 @@
 import random, os.path, inquirer, os
 
 #Our stuff
-from  tkinter import *
 import core_solver
 import game
 import menu
@@ -115,39 +114,44 @@ def main(argv):
 		else:
 			interface = 0
 			break
-	if interface != 1:
-		if (input_board == []):
-			print("\033[90m")
-			squareside = input('\033[92mChoose size for Npuzzle: \n\033[91m')
-			#####################
-			#Ce check est obligatoire sinon tu peux balance une string ....
-			if squareside.isdigit() == False or int(squareside) < 2:
-				return(print('\033[91mBad value select int > 1'))
-			#####################
-			squareside = int(squareside)
-			print("\033[90m")
-		heuristic, algo = menu_terminal(squareside)
-		gamemode = 'ia'
-	# Comment this else if you don't want to go in the menu
-	# 
-	else:
-		screen = pygame.display.set_mode((640, 480), 0, 32)
-		menu_items = ('IA', 'Solo', 'Quit')
-		pygame.display.set_caption('Game Menu')
-		gm = GameMenu(screen, menu_items, input_board)
-		# return the choice enter in the menu
-		heuristic, algo, squareside, gamemode = gm.run()
+	
+	main_menu_loop = 1
+	while main_menu_loop == 1:
+		if interface != 1:
+			if (input_board == []):
+				print("\033[90m")
+				squareside = input('\033[92mChoose size for Npuzzle: \n\033[91m')
+				#####################
+				#Ce check est obligatoire sinon tu peux balance une string ....
+				if squareside.isdigit() == False or int(squareside) < 2:
+					print("\033[91mBad value select int > 1")
+					return
+				#####################
+				squareside = int(squareside)
+				print("\033[90m")
+			heuristic, algo = menu_terminal(squareside)
+			gamemode = 'ia'
+		# Comment this else if you don't want to go in the menu
+		# 
+		else:
+			fenetre = pygame.display.set_mode((640, 480), 0, 32)
+			menu_items = ('IA', 'Solo', 'Quit')
+			pygame.display.set_caption('Game Menu')
+			gm = GameMenu(fenetre, menu_items, input_board)
+			# return the choice enter in the menu
+			heuristic, algo, squareside, gamemode = gm.run()
 
-	size = squareside*100
-	img = Image.open("/Users/gkuma/git/Npuzzle/photo.jpg").resize((size,size))
-	out = open("/Users/gkuma/git/Npuzzle/photo.jpg", "w")
-	img.save(out, "JPEG")
+		size = squareside*100
+		img = Image.open("/home/gabba/Documents/pygame/Npuzzle/photo.jpg").resize((size,size))
+		out = open("/home/gabba/Documents/pygame/Npuzzle/photo.jpg", "w")
+		img.save(out, "JPEG")
 
-	ia_final_move, allcase = core_solver.call_core(squareside, heuristic, algo, gamemode, input_board)
-	if input_board:
-		allcase = filegameboard
-	if interface == 1:
-		game.call_game(ia_final_move, squareside, allcase, gamemode)
+		ia_final_move, allcase = core_solver.call_core(squareside, heuristic, algo, gamemode, input_board)
+		if input_board:
+			allcase = filegameboard
+		if interface == 1:
+			main_menu_loop = game.call_game(ia_final_move, squareside, allcase, gamemode, fenetre)
+
 
 if __name__ == '__main__':
 	if len(sys.argv) == 1:

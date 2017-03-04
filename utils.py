@@ -25,7 +25,7 @@ class Block(object):
 			self.iscursor = 1
 		else:
 			self.iscursor = 0
-		self.background = pygame.image.load("/Users/gkuma/git/Npuzzle/"+photo)
+		self.background = pygame.image.load("/home/gabba/Documents/pygame/Npuzzle/"+photo)
 
 def return_pos_image(index, indexi, squareside):
 	# gameboard = set_board(index, squareside)
@@ -75,7 +75,7 @@ def ia_move(ia_final_move, index_move, blocks, squareside):
 		key = K_LEFT
 	if ia_final_move[index_move] == 'RIGHT':
 		key = K_RIGHT
-	blocks = key_hook(blocks, key, squareside)
+	blocks = key_hook(blocks, key, squareside, None)
 
 def player_move(ia_final_move, index_move, blocks, squareside, new_gameboard):
 	if ia_final_move[index_move] == 'UP':

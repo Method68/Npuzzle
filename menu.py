@@ -59,7 +59,9 @@ class GameMenu():
 		posxy = self.items[0][3]
 		posx = posxy[0]
 		posy = posxy[1]
-		self.screen.blit(self.font.render(('X'), 1, (255,0,0)), (posx + 100, posy))
+		fond = pygame.image.load("/home/gabba/Documents/pygame/Npuzzle/background.jpg")
+		self.screen.blit(fond, (0,0))
+		self.screen.blit(self.font.render(('<='), 1, (230,230,230)), (posx + 100, posy))
 		while mainloop:
 			# Limit frame speed to 50 FPS
 			self.clock.tick(50)
@@ -210,13 +212,11 @@ class GameMenu():
 
 			elif validate == 1 and choice == 'Quit':
 				sys.exit()
-
-			# Redraw the background
-			self.screen.fill(self.bg_color)
+			self.screen.blit(fond, (0,0))
 			for name, label, (width, height), (posx, posy) in self.items:
 				self.screen.blit(label, (posx, posy))
 				if name == choice:
-					self.screen.blit(self.font.render(('X'), 1, (255,0,0)), (200, posy))
+					self.screen.blit(self.font.render(('=>'), 1, (230,230,230)), (200, posy))
 			pygame.display.flip()
 
 		#get the rigth value
