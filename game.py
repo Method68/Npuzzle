@@ -8,7 +8,6 @@ import replay
 from replay import ReplayMenu
 import image_slicer
 from core_solver import set_finalboard ,set_board
-from time import sleep
 
 def display_nbr_move(fenetre, total_move):
 	# initialize font; must be called after 'pygame.init()' to avoid 'Font not Initialized' error
@@ -34,6 +33,22 @@ def display_ia_mode(fenetre, auto):
 	fenetre.blit(label, (200, 140))
 	fenetre.blit(label2, (350, 140))
 
+def display_timer(fenetre, timer, milliseconds, seconds, minutes):
+	if milliseconds > 1000:
+		seconds += 1
+		milliseconds -= 1000
+	if seconds > 60:
+		minutes += 1
+		seconds -= 60
+	myfont = pygame.font.SysFont("monospace", 15)
+	t_txt = myfont.render("time : ", 1, (255,255,0))
+	timer_txt = myfont.render(str(minutes)+":"+str(seconds)+":"+str(milliseconds), 1, (255,255,0))
+	pygame.draw.rect(fenetre, [45, 50, 70], (350, 100, 200, 15))
+	fenetre.blit(t_txt, (350, 100))
+	fenetre.blit(timer_txt, (400, 100))
+	pygame.display.flip()
+	return milliseconds, seconds, minutes
+
 def main_loop_solo(squareside, fenetre, blocks, fond):
 	index_move = 0
 	loop = 1
@@ -50,7 +65,12 @@ def main_loop_solo(squareside, fenetre, blocks, fond):
 	print ("gameboard")
 	print (gameboard)
 	final_board = set_finalboard(squareside)
+	timer = pygame.time.Clock()
+	minutes = 0
+	seconds = 0
+	milliseconds = 0
 	while loop:
+		milliseconds += timer.tick_busy_loop(60)
 		for event in pygame.event.get():
 			if event.type == KEYDOWN:
 				if event.key == 273:
@@ -77,7 +97,6 @@ def main_loop_solo(squareside, fenetre, blocks, fond):
 					continue
 				case = (i, case)
 				break
-
 			if event.key == 273 and case[0] > 0:
 				gameboard[case[0]][case[1]], gameboard[case[0]-1][case[1]] = gameboard[case[0]-1][case[1]], gameboard[case[0]][case[1]]
 			elif event.key == 274 and case[0] < (squareside - 1):
@@ -86,7 +105,6 @@ def main_loop_solo(squareside, fenetre, blocks, fond):
 				gameboard[case[0]][case[1]-1], gameboard[case[0]][case[1]] = gameboard[case[0]][case[1]], gameboard[case[0]][case[1]-1]
 			elif event.key == 275 and case[1] < (squareside - 1):
 				gameboard[case[0]][case[1]+1], gameboard[case[0]][case[1]] = gameboard[case[0]][case[1]], gameboard[case[0]][case[1]+1]
-			
 			i = 0
 			fenetre.blit(fond, (0,0))
 			while (i < (squareside*squareside)):
@@ -104,6 +122,8 @@ def main_loop_solo(squareside, fenetre, blocks, fond):
 			if (gameboard == final_board):
 				print ("win")
 				break
+		milliseconds, seconds, minutes = display_timer(fenetre, timer, milliseconds, seconds, minutes)
+	print ("Final score \n time {}:{}:{}\n total_move {}".format(minutes, seconds, milliseconds, total_move))
 
 def main_loop(ia_final_move, squareside, fenetre, blocks, fond):
 	len_move = len(ia_final_move)
@@ -148,7 +168,7 @@ def main_loop(ia_final_move, squareside, fenetre, blocks, fond):
 				break
 			if auto == 1:
 				space = 1
-				sleep(0.1)
+				pygame.time.wait(100)
 			else:
 				space = 0
 			total_move += 1
