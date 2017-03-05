@@ -44,14 +44,15 @@ def loopOnBoardInversion(gameboardsimplearray, size):
 		i += 1
 	return inversion
 
-def checkIfSolvable(gameboard):
+def checkIfSolvable(gameboard, finalboard):
 	gameboardsimplearray = []
 	numberElem = -1
 	for elem in gameboard:
 		for value in elem:
 			gameboardsimplearray.append(value)
 		numberElem += 1
-
+	if gameboard == finalboard:
+		return False
 	positionZero = 0
 	while(0 <= numberElem):
 		for elem in gameboard[numberElem]:
@@ -125,7 +126,7 @@ def construct(width, gameboard, finalboard, answers, algo, gamemode):
 		print(str(row))
 
 	#If total inversion % 2 == 1, puzzle is unsolvable
-	checkifsolvable = checkIfSolvable(gameboard)
+	checkifsolvable = checkIfSolvable(gameboard, finalboard)
 	if (checkifsolvable == False):
 		print("\n\033[91mThis game board is unsolvable !\033[90m")
 		return None

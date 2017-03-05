@@ -46,6 +46,7 @@ def aStar (width, gameboard, finalboard, answers):
 	stateTree = [current]
 	heapify(stateTree)
 	i = 0
+	totalstate = 0
 	while (not current[-1] == finalboard):
 		####################
 		#load view in terminal
@@ -67,4 +68,6 @@ def aStar (width, gameboard, finalboard, answers):
 				heappush(stateTree,  (euclidian(width, state[1], finalboard, 1000) + current[1] + 1, current[1] + 1, current[2] + [state[0]], state[1]))
 			else:
 				heappush(stateTree,  (chebyshev(width, state[1], finalboard, 1000) + current[1] + 1, current[1] + 1, current[2] + [state[0]], state[1]))
+			totalstate += 1
+	print ("totalstate = " + str(totalstate))
 	return (current[1], current[2])

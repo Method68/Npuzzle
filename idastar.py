@@ -115,14 +115,14 @@ def IDA_star(width, gameboard, finalboard, answers):
 			gameboard = update_gameboard(gameboard, allmovesstring[::-1], width)
 			print(gameboard)
 			match += 1
-
 			if gameboard == finalboard:
 				for elem in final_list_moves:
 					final_all_moves += 1
+				print ("Total all states selected = " + str(allstatesselected))
 				return final_all_moves, final_list_moves, allstatesselected
 		elif tmp == float("inf"):
 			return 'Fail', 'Fail'
-		current = tmp    
+		current = tmp
 
 def are_all_tildes_valid_untill_match_value(match, gameboard, tmpboard, width):
 	cmpt = 0

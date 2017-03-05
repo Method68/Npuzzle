@@ -18,10 +18,10 @@ from PIL import Image
 from resizeimage import resizeimage
 
 #see if we can load more than standard BMP
-# if not pygame.image.get_extended():
-# 		raise SystemExit("Sorry, extended image module required")
+if not pygame.image.get_extended():
+		raise SystemExit("Sorry, extended image module required")
 
-def menu_terminal(squareside):
+def terminal_menu(squareside):
 	####################
 	#Select heuristic
 	questions = [
@@ -87,15 +87,7 @@ def file_read(file):
 			exit()
 	return filegameboard, int(test_squareroot_value)
 
-
-def main(argv):
-	squareside = 0
-	filegameboard = []
-	input_board = []
-	if argv != None:
-		filegameboard, squareside = file_read(open(argv, 'r'))
-		input_board = core_solver.set_board(filegameboard, squareside)
-
+def graphical_interface_mode():
 	while 42:
 		#####################
 		#Select interface Yes, No
@@ -114,38 +106,58 @@ def main(argv):
 		else:
 			interface = 0
 			break
-	
-	main_menu_loop = 1
-	while main_menu_loop == 1:
-		if interface != 1:
-			if (input_board == []):
-				print("\033[90m")
-				squareside = input('\033[92mChoose size for Npuzzle: \n\033[91m')
-				#####################
-				#Ce check est obligatoire sinon tu peux balance une string ....
-				if squareside.isdigit() == False or int(squareside) < 2:
-					print("\033[91mBad value select int > 1")
-					return
-				#####################
-				squareside = int(squareside)
-				print("\033[90m")
-			heuristic, algo = menu_terminal(squareside)
-			gamemode = 'ia'
+	return interface
+
+def game_setting_menu(interface, input_board):
+	squareside = 0
+	if interface != 1:
+		if (input_board == []):
+			print("\033[90m")
+			squareside = input('\033[92mChoose size for Npuzzle: \n\033[91m')
+			#####################
+			#Ce check est obligatoire sinon tu peux balance une string ....
+			if squareside.isdigit() == False or int(squareside) < 2:
+				print("\033[91mBad value select int > 1")
+				return
+			#####################
+			squareside = int(squareside)
+			print("\033[90m")
+		heuristic, algo = terminal_menu(squareside)
+		gamemode = 'ia'
 		# Comment this else if you don't want to go in the menu
 		# 
-		else:
-			fenetre = pygame.display.set_mode((800, 600), 0, 32)
-			menu_items = ('IA', 'Solo', 'Quit')
-			pygame.display.set_caption('Game Menu')
-			gm = GameMenu(fenetre, menu_items, input_board)
-			# return the choice enter in the menu
-			heuristic, algo, squareside, gamemode = gm.run()
+	else:
+		fenetre = pygame.display.set_mode((1000, 800), 0, 32)
+		menu_items = ('IA', 'Solo', 'Quit')
+		pygame.display.set_caption('Game Menu')
+		gm = GameMenu(fenetre, menu_items, input_board)
+		# return the choice enter in the menu
+		heuristic, algo, squareside, gamemode = gm.run()
+	return heuristic, algo, squareside, gamemode, fenetre
 
-		size = squareside*100
-		img = Image.open("/home/gabba/Downloads/photo.jpg").resize((size,size))
-		out = open("/home/gabba/Downloads/photo.jpg", "w")
-		img.save(out, "JPEG")
+def main(argv):
+	squareside = 0
+	filegameboard = []
+	input_board = []
+	fenetre= None
+	if argv != None:
+		filegameboard, squareside = file_read(open(argv, 'r'))
+		input_board = core_solver.set_board(filegameboard, squareside)
 
+	interface = graphical_interface_mode()
+	try:
+		Image.open("/home/gabba/Downloads/photo_200_.jpg")
+	except IOError:
+		game_size = 2
+		while (game_size < 6):
+			size = game_size*100
+			img = Image.open("/home/gabba/Downloads/photo.jpg").resize((size,size))
+			out = open("/home/gabba/Downloads/photo_"+str(size)+"_"+".jpg", "w")
+			img.save(out, "JPEG")
+			game_size += 1
+	main_menu_loop = 1
+	while main_menu_loop == 1:
+		heuristic, algo, squareside, gamemode, fenetre = game_setting_menu(interface, input_board)
 		ia_final_move, allcase = core_solver.call_core(squareside, heuristic, algo, gamemode, input_board)
 		if input_board:
 			allcase = filegameboard

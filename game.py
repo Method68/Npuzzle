@@ -8,6 +8,7 @@ import replay
 from replay import ReplayMenu
 import image_slicer
 from core_solver import set_finalboard ,set_board
+from time import sleep
 
 def display_nbr_move(fenetre, total_move):
 	# initialize font; must be called after 'pygame.init()' to avoid 'Font not Initialized' error
@@ -16,14 +17,28 @@ def display_nbr_move(fenetre, total_move):
 	# render text
 	label = myfont.render("Move Total", 1, (255,255,0))
 	label2 = myfont.render(str(total_move), 1, (255,255,0))
-	fenetre.blit(label, (100, 100))
-	fenetre.blit(label2, (100, 120))
+	fenetre.blit(label, (600, 100))
+	fenetre.blit(label2, (600, 120))
+
+def display_ia_mode(fenetre, auto):
+	myfont = pygame.font.SysFont("monospace", 15)
+	titre_key = myfont.render("Press space: step by step", 1, (255,255,0))
+	titre_auto = myfont.render("Press enter: Auto mode", 1, (255,255,0))
+	label = myfont.render("Mode auto:", 1, (255,255,0))
+	if (auto == 0):
+		label2 = myfont.render("off", 1, (255,0,0))
+	if (auto == 1):
+		label2 = myfont.render("on", 1, (0,255,0))
+	fenetre.blit(titre_key, (200, 100))
+	fenetre.blit(titre_auto, (200, 120))
+	fenetre.blit(label, (200, 140))
+	fenetre.blit(label2, (350, 140))
 
 def main_loop_solo(squareside, fenetre, blocks, fond):
 	index_move = 0
 	loop = 1
 	space = 0
-	total_move = 0
+	total_move = 1
 	ia_final_move = 0
 	movelen = 0
 	move = []
@@ -93,9 +108,10 @@ def main_loop_solo(squareside, fenetre, blocks, fond):
 def main_loop(ia_final_move, squareside, fenetre, blocks, fond):
 	len_move = len(ia_final_move)
 	index_move = 0
-	total_move = 0
+	total_move = 1
 	loop = 1
 	space = 0
+	auto = 0
 	while loop:
 		for event in pygame.event.get():
 			if event.type == QUIT:
@@ -105,6 +121,12 @@ def main_loop(ia_final_move, squareside, fenetre, blocks, fond):
 					space = 1
 				elif event.key == K_ESCAPE:
 					loop = 0
+				elif event.key == 13:
+					if (auto == 1):
+						auto = 0
+					else:
+						auto = 1
+					space = 1
 		#use space to see the next step
 		if space == 1 and len_move > 0:
 			utils.ia_move(ia_final_move, index_move, blocks, squareside)
@@ -117,36 +139,49 @@ def main_loop(ia_final_move, squareside, fenetre, blocks, fond):
 			fenetre.blit(block0.background, (block0.x, block0.y))
 			pygame.draw.rect(fenetre, [238, 0, 0], (block0.x, block0.y, 100, 100), 1)
 			display_nbr_move(fenetre, total_move)
+			display_ia_mode(fenetre, auto)
 			# pygame.display.update()
 			pygame.display.flip()
 			index_move += 1
 			if index_move == len_move:
 				print ("\033[92mWIN")
 				break
-			space = 0
+			if auto == 1:
+				space = 1
+				sleep(0.1)
+			else:
+				space = 0
 			total_move += 1
 
-def first_draw(squareside, fenetre, blocks):
+def first_draw(squareside, fenetre, blocks, gamemode):
 	i = 0
+	total_move = 0
 	while (i < (squareside*squareside)):
 		utils.draw_block(blocks, fenetre, i)
 		fenetre.blit(blocks[i].background, (blocks[i].x, blocks[i].y))
 		pygame.draw.rect(fenetre, [238, 238, 224], (blocks[i].x, blocks[i].y, 100, 100), 1)
+		block0 = utils.get_block_zero(blocks)
+		fenetre.blit(block0.background, (block0.x, block0.y))
+		pygame.draw.rect(fenetre, [238, 0, 0], (block0.x, block0.y, 100, 100), 1)
 		pygame.display.update()
 		i += 1
+	if (gamemode == 'ia'):
+		display_ia_mode(fenetre, 0)
+		display_nbr_move(fenetre, total_move)	
+	elif (gamemode == 'solo'):
+		display_nbr_move(fenetre, total_move)
 
 def call_game(ia_final_move, squareside, allcase, gamemode, fenetre):
-	tiles = image_slicer.slice('/home/gabba/Downloads/photo.jpg', squareside*squareside, save=False)
+	tiles = image_slicer.slice("/home/gabba/Downloads/photo_"+str(squareside*100)+"_.jpg", squareside*squareside, save=False)
 	image_slicer.save_tiles(tiles, directory='/home/gabba/Downloads/', prefix='')
 	replay = 1
 	while (replay == 1):
 		blocks = []
 		blocks = utils.build_board(allcase, squareside, blocks, fenetre)
-		# pygame.init()
 		fond = pygame.image.load("/home/gabba/Downloads/background.jpg")
 		fenetre.blit(fond, (0,0))
-		pygame.display.flip()
-		first_draw(squareside, fenetre, blocks)
+		first_draw(squareside, fenetre, blocks, gamemode)
+		pygame.display.flip()	
 		if gamemode == 'ia':
 			main_loop(ia_final_move, squareside, fenetre, blocks, fond)
 		if gamemode == 'solo':

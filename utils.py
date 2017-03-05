@@ -28,7 +28,6 @@ class Block(object):
 		self.background = pygame.image.load("/home/gabba/Downloads/"+photo)
 
 def return_pos_image(index, indexi, squareside):
-	# gameboard = set_board(index, squareside)
 	finalboard = set_finalboard(squareside)
 	for raw in range(squareside):
 		for col in range(squareside):
