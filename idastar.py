@@ -96,6 +96,7 @@ def update_gameboard(gameboard, allmovesstring, width):
 def IDA_star(width, gameboard, finalboard, answers):
 	match = 0
 	global final_list_moves
+	final_list_moves = []
 	final_all_moves = 0
 	tmpboard = negative_board(width)
 	match = nbr_of_neg(tmpboard,width)

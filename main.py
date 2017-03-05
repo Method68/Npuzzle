@@ -163,6 +163,8 @@ def main(argv):
 			allcase = filegameboard
 		if interface == 1:
 			main_menu_loop = game.call_game(ia_final_move, squareside, allcase, gamemode, fenetre)
+		ia_final_move = []
+		allcase = []
 
 
 if __name__ == '__main__':
