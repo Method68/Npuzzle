@@ -206,6 +206,7 @@ def call_game(ia_final_move, squareside, allcase, gamemode, fenetre):
 			main_loop(ia_final_move, squareside, fenetre, blocks, fond)
 		if gamemode == 'solo':
 			main_loop_solo(squareside, fenetre, blocks, fond)
+		pygame.time.wait(3000)
 		menu_items = ('Replay', 'MainMenu', 'Quit')
 		pygame.display.set_caption('Replay')
 		replay_menu = ReplayMenu(fenetre, menu_items)

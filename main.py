@@ -108,8 +108,8 @@ def graphical_interface_mode():
 			break
 	return interface
 
-def game_setting_menu(interface, input_board):
-	squareside = 0
+def game_setting_menu(interface, input_board, squareside):
+	fenetre = None
 	if interface != 1:
 		if (input_board == []):
 			print("\033[90m")
@@ -139,11 +139,12 @@ def main(argv):
 	squareside = 0
 	filegameboard = []
 	input_board = []
-	fenetre= None
+	fenetre = None
+	file_from_input = 0
 	if argv != None:
 		filegameboard, squareside = file_read(open(argv, 'r'))
 		input_board = core_solver.set_board(filegameboard, squareside)
-
+		file_from_input = 1
 	interface = graphical_interface_mode()
 	try:
 		Image.open("/home/gabba/Downloads/photo_200_.jpg")
@@ -157,12 +158,17 @@ def main(argv):
 			game_size += 1
 	main_menu_loop = 1
 	while main_menu_loop == 1:
-		heuristic, algo, squareside, gamemode, fenetre = game_setting_menu(interface, input_board)
+		print ("value of filegameboard")
+		print (filegameboard)
+		heuristic, algo, squareside, gamemode, fenetre = game_setting_menu(interface, input_board, squareside)
 		ia_final_move, allcase = core_solver.call_core(squareside, heuristic, algo, gamemode, input_board)
 		if input_board:
 			allcase = filegameboard
 		if interface == 1:
 			main_menu_loop = game.call_game(ia_final_move, squareside, allcase, gamemode, fenetre)
+		if file_from_input:
+			filegameboard, squareside = file_read(open(argv, 'r'))
+			input_board = core_solver.set_board(filegameboard, squareside)
 		ia_final_move = []
 		allcase = []
 
