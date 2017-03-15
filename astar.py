@@ -36,7 +36,7 @@ def getNextStates (width, current, laststate):
 		nextStates.append(('DOWN', d, (empty[0] + 1, empty[1])))
 	return (nextStates)
  
-def aStar (width, gameboard, finalboard, answers):
+def aStar (width, gameboard, finalboard, answers, allstatesselected):
 	if answers == "Manhattan":
 		current = (manhattan(width, gameboard, finalboard, 1000), 0, [], gameboard)
 	elif answers == "Euclidian":
@@ -44,9 +44,11 @@ def aStar (width, gameboard, finalboard, answers):
 	else:
 		current = (chebyshev(width, gameboard, finalboard, 1000), 0, [], gameboard)
 	stateTree = [current]
+
+	# print ("first state of tree")
+	# print (stateTree)
 	heapify(stateTree)
 	i = 0
-	totalstate = 0
 	while (not current[-1] == finalboard):
 		####################
 		#load view in terminal
@@ -58,16 +60,28 @@ def aStar (width, gameboard, finalboard, answers):
 		i += 1
 		####################
 		current = heappop(stateTree)
+		# print ("First heappop")
+		# print (current)
+		test = 0
 		state = None
 		for elem in current[2]:
 			state = elem
 		for state in getNextStates(width, current[-1], state):
 			if answers == "Manhattan":
+				test += 1
 				heappush(stateTree,  (manhattan(width, state[1], finalboard, 1000) + current[1] + 1, current[1] + 1, current[2] + [state[0]], state[1]))
 			elif answers == "Euclidian":
 				heappush(stateTree,  (euclidian(width, state[1], finalboard, 1000) + current[1] + 1, current[1] + 1, current[2] + [state[0]], state[1]))
 			else:
 				heappush(stateTree,  (chebyshev(width, state[1], finalboard, 1000) + current[1] + 1, current[1] + 1, current[2] + [state[0]], state[1]))
-			totalstate += 1
-	print ("totalstate = " + str(totalstate))
-	return (current[1], current[2])
+			allstatesselected += 1
+
+	# print ("Statetree Complexity in size")
+	# print (stateTree)
+	print ("len of stateTree Find (Complexity in size) with that")
+	print (len(stateTree))
+	# Total of all state selected in each open state from the beggining
+	for groupes in stateTree:
+		for listmoves in groupes[2]:
+			allstatesselected += len(listmoves) 
+	return current[1], current[2] , allstatesselected

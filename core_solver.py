@@ -114,6 +114,8 @@ def call_core(squareside, heuristic, algo, gamemode, filegameboard):
 
 
 def construct(width, gameboard, finalboard, answers, algo, gamemode):
+	
+	allstatesselected = 0
 	#Board with random value
 	print("\n\033[95mGAME BOARD\033[0m")
 	posrow = 0
@@ -142,13 +144,14 @@ def construct(width, gameboard, finalboard, answers, algo, gamemode):
 		time1 = time.time()
 		if algo == "Astar":
 			print('\033[91mAlgorythm selected : \033[0m' + str(algo))
-			seqCount, sequence = aStar(width, gameboard, finalboard, answers)
+			seqCount, sequence, allstatesselected = aStar(width, gameboard, finalboard, answers, allstatesselected)
 		else:
 			print('\033[91mAlgorythm selected : \033[0m' + str(algo))
-			seqCount, sequence, allstatesselected = IDA_star(width, gameboard, finalboard, answers)
+			seqCount, sequence, allstatesselected = IDA_star(width, gameboard, finalboard, answers, allstatesselected)
 		#Time finished A star
 		time2 = time.time()
 
+		print ("allstatesselected CORE SOLVER = " + str(allstatesselected))
 		#Print time, number of move and all move to accomplite board
 		print("\n\033[91mTime : \033[0m" + str(round(time2 - time1, 3)) + "scd")
 		print("\033[91mNumber of move : \033[0m" + str(seqCount))

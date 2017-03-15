@@ -93,9 +93,9 @@ def update_gameboard(gameboard, allmovesstring, width):
 		allmovesstring.pop(0)		
 		cmpt += 1
 
-def IDA_star(width, gameboard, finalboard, answers):
-	match = 0
+def IDA_star(width, gameboard, finalboard, answers, allstatesselected):
 	global final_list_moves
+	match = 0
 	final_list_moves = []
 	final_all_moves = 0
 	tmpboard = negative_board(width)
@@ -111,7 +111,7 @@ def IDA_star(width, gameboard, finalboard, answers):
 		current = chebyshev(width, gameboard, tmpboard, match)
 	laststate = None
 	while(1):
-		tmp = IDA(width, gameboard, finalboard, tmpboard, 1, current, match, laststate, answers)
+		tmp, allstatesselected = IDA(width, gameboard, finalboard, tmpboard, 1, current, match, laststate, answers, allstatesselected)
 		if tmp == 1:
 			gameboard = update_gameboard(gameboard, allmovesstring[::-1], width)
 			print(gameboard)
@@ -138,11 +138,11 @@ def are_all_tildes_valid_untill_match_value(match, gameboard, tmpboard, width):
 		return 1
 
 allstatesselected = 0
-def IDA(width, gameboard, finalboard, tmpboard, g, current, match, laststate, answers):
+def IDA(width, gameboard, finalboard, tmpboard, g, current, match, laststate, answers, allstatesselected):
 	global allmoves
 	global allmovesstring
 	global i
-	global allstatesselected
+
 
 	####################
 	#load view in terminal
@@ -167,13 +167,13 @@ def IDA(width, gameboard, finalboard, tmpboard, g, current, match, laststate, an
 	f = g + heuri
 
 	if f > current:
-		return f
+		return f, allstatesselected
 
 	#this function check if all the tildes in tmpblock are matched by gameboard
 	mathc_all_block = are_all_tildes_valid_untill_match_value(match, gameboard, tmpboard, width)
 	if mathc_all_block == 1:
 		allmoves = 0
-		return 1
+		return 1, allstatesselected
 
 	minval = float('inf')
 	for sibling in getNextStates(width, gameboard, laststate):
@@ -182,11 +182,11 @@ def IDA(width, gameboard, finalboard, tmpboard, g, current, match, laststate, an
 		laststate = sibling[1]
 		allstatesselected += 1
 		###############
-		tmp = IDA(width, sibling[0], finalboard, tmpboard, g + 1, current, match, laststate, answers)
+		tmp, allstatesselected = IDA(width, sibling[0], finalboard, tmpboard, g + 1, current, match, laststate, answers, allstatesselected)
 		if tmp == 1:
 			allmoves += 1
 			allmovesstring.append(sibling[1])
-			return 1
+			return 1, allstatesselected
 		if tmp < minval:
 			minval = tmp
-	return minval
+	return minval, allstatesselected
