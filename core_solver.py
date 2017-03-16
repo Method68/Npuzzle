@@ -51,8 +51,6 @@ def checkIfSolvable(gameboard, finalboard):
 		for value in elem:
 			gameboardsimplearray.append(value)
 		numberElem += 1
-	if gameboard == finalboard:
-		return False
 	positionZero = 0
 	while(0 <= numberElem):
 		for elem in gameboard[numberElem]:
@@ -128,6 +126,9 @@ def construct(width, gameboard, finalboard, answers, algo, gamemode):
 		print(str(row))
 
 	#If total inversion % 2 == 1, puzzle is unsolvable
+	if gameboard == finalboard:
+		print("\n\033[91mThis game board is Allready solve !\033[90m")
+		return None
 	checkifsolvable = checkIfSolvable(gameboard, finalboard)
 	if (checkifsolvable == False):
 		print("\n\033[91mThis game board is unsolvable !\033[90m")
@@ -150,8 +151,6 @@ def construct(width, gameboard, finalboard, answers, algo, gamemode):
 			seqCount, sequence, allstatesselected = IDA_star(width, gameboard, finalboard, answers, allstatesselected)
 		#Time finished A star
 		time2 = time.time()
-
-		print ("allstatesselected CORE SOLVER = " + str(allstatesselected))
 		#Print time, number of move and all move to accomplite board
 		print("\n\033[91mTime : \033[0m" + str(round(time2 - time1, 3)) + "scd")
 		print("\033[91mNumber of move : \033[0m" + str(seqCount))

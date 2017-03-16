@@ -25,7 +25,7 @@ class Block(object):
 			self.iscursor = 1
 		else:
 			self.iscursor = 0
-		self.background = pygame.image.load("/home/gabba/Downloads/"+photo)
+		self.background = pygame.image.load("/Users/gkuma/Downloads/"+photo)
 
 def return_pos_image(index, indexi, squareside):
 	finalboard = set_finalboard(squareside)

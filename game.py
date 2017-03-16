@@ -192,13 +192,13 @@ def first_draw(squareside, fenetre, blocks, gamemode):
 		display_nbr_move(fenetre, total_move)
 
 def call_game(ia_final_move, squareside, allcase, gamemode, fenetre):
-	tiles = image_slicer.slice("/home/gabba/Downloads/photo_"+str(squareside*100)+"_.jpg", squareside*squareside, save=False)
-	image_slicer.save_tiles(tiles, directory='/home/gabba/Downloads/', prefix='')
+	tiles = image_slicer.slice("/Users/gkuma/Downloads/photo_"+str(squareside*100)+"_.jpg", squareside*squareside, save=False)
+	image_slicer.save_tiles(tiles, directory='/Users/gkuma/Downloads/', prefix='')
 	replay = 1
 	while (replay == 1):
 		blocks = []
 		blocks = utils.build_board(allcase, squareside, blocks, fenetre)
-		fond = pygame.image.load("/home/gabba/Downloads/background.jpg")
+		fond = pygame.image.load("/Users/gkuma/Downloads/background.jpg")
 		fenetre.blit(fond, (0,0))
 		first_draw(squareside, fenetre, blocks, gamemode)
 		pygame.display.flip()	

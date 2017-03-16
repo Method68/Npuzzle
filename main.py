@@ -60,22 +60,49 @@ def terminal_menu(squareside):
 	return heuristic, algo
 
 def file_read(file):
+	linePos = 0
 	filegameboard = []
 	rfile = file.readlines()
 	if len(rfile) == 0:
 		print('Error value doesn\'t exist')
 		exit()
 	numberelem = 0
+	numberCol = 0
+	squareside = 0
 	for line in rfile:
-		numberelem += 1
+		numberRaw = 0
 		line = line.replace('\n', '')
-		line = line.replace(' ', '')
-		line = line.replace('\t', '')
-		if line.isdigit():
-			filegameboard.append(int(line))
-	if numberelem < 4:
-		print('Error incorrect size of board')
+		line = line.replace('\t', ' ')
+		if linePos == 0:
+			if not line.isdigit():
+				print('Error incorrect value')
+				exit()	
+			else:
+				squareside = int (line)
+		else:
+			line = line.replace('\n', '')
+			# line = line.replace(' ', '')
+			line = line.replace('\t', ' ')
+			line = line.replace(',', '')
+			lineElem = line.split(' ')
+			for elem in lineElem:
+				numberelem += 1
+				if elem.isdigit():
+					filegameboard.append(int(elem))
+				else:
+					print('Error incorrect size of board')
+					exit()
+				numberRaw += 1
+		if (linePos != 0 and numberRaw != squareside):
+			print('Error incorrect size of board')
+			exit()
+		numberCol += 1
+		linePos += 1
+
+	if (numberCol -1!= squareside):
+		print('Error incorrect size of board'+str(numberCol))
 		exit()
+
 	test_squareroot_value = numberelem ** 0.5
 	decimal = str(test_squareroot_value - int(test_squareroot_value))[1:]
 	if decimal != '.0':
@@ -147,19 +174,17 @@ def main(argv):
 		file_from_input = 1
 	interface = graphical_interface_mode()
 	try:
-		Image.open("/home/gabba/Downloads/photo_200_.jpg")
+		Image.open("/Users/gkuma/Downloads/photo_200_.jpg")
 	except IOError:
 		game_size = 2
 		while (game_size < 6):
 			size = game_size*100
-			img = Image.open("/home/gabba/Downloads/photo.jpg").resize((size,size))
-			out = open("/home/gabba/Downloads/photo_"+str(size)+"_"+".jpg", "w")
+			img = Image.open("/Users/gkuma/Downloads/photo.jpg").resize((size,size))
+			out = open("/Users/gkuma/Downloads/photo_"+str(size)+"_"+".jpg", "w")
 			img.save(out, "JPEG")
 			game_size += 1
 	main_menu_loop = 1
 	while main_menu_loop == 1:
-		print ("value of filegameboard")
-		print (filegameboard)
 		heuristic, algo, squareside, gamemode, fenetre = game_setting_menu(interface, input_board, squareside)
 		ia_final_move, allcase = core_solver.call_core(squareside, heuristic, algo, gamemode, input_board)
 		if input_board:

@@ -119,7 +119,8 @@ def IDA_star(width, gameboard, finalboard, answers, allstatesselected):
 			if gameboard == finalboard:
 				for elem in final_list_moves:
 					final_all_moves += 1
-				print ("Total all states selected = " + str(allstatesselected))
+				print ("\033[91mComplexity in Time : \033[0m " + str(allstatesselected))
+				print ("\033[91mComplexity in Size : \033[0m " + "1")
 				return final_all_moves, final_list_moves, allstatesselected
 		elif tmp == float("inf"):
 			return 'Fail', 'Fail'
@@ -146,6 +147,7 @@ def IDA(width, gameboard, finalboard, tmpboard, g, current, match, laststate, an
 
 	####################
 	#load view in terminal
+
 	syms = ['\\', '|', '/', '-']
 	if i == 4:
 		i = 0
