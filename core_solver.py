@@ -101,10 +101,10 @@ def call_core(squareside, heuristic, algo, gamemode, filegameboard):
 			gameboard = filegameboard
 		solvable = construct(squareside, gameboard, finalboard, heuristic, algo, gamemode)
 		if (solvable != None):
-			print ("\033[92mBoard Builded\033[0m")
+			print ("\n\033[92mBoard Builded\033[0m\n")
 			break
 		else:
-			print ("\033[91mBoard Not Builded\033[0m")
+			print ("\n\033[91mBoard Not Builded\033[0m\n")
 			if dont_replay == 1:
 				print ("\033[92mNot solvable\033[0m")
 				exit()

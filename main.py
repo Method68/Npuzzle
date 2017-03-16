@@ -64,55 +64,71 @@ def file_read(file):
 	filegameboard = []
 	rfile = file.readlines()
 	if len(rfile) == 0:
-		print('Error value doesn\'t exist')
+		print('\033[91mError value doesn\'t exist\033[0m')
 		exit()
 	numberelem = 0
 	numberCol = 0
 	squareside = 0
 	for line in rfile:
 		numberRaw = 0
-		line = line.replace('\n', '')
 		line = line.replace('\t', ' ')
+		line = line.replace(' ', ',')
+		if ('#' in line):
+			line = line.split('#', 1)[0]
+		if (line == ''):
+			continue
+		if (line == ''):
+			print('\033[91mError empty line\033[0m')
+			exit()
+		if (line != '\n'):
+			line = line.replace('\n', '')
 		if linePos == 0:
 			if not line.isdigit():
-				print('Error incorrect value')
-				exit()	
+				print('\033[91mError incorrect value\033[0m')
+				exit()
 			else:
 				squareside = int (line)
 		else:
-			line = line.replace('\n', '')
-			# line = line.replace(' ', '')
+			if (line == ''):
+				print('\033[91mError empty line\033[0m')
+				exit()
+			if (line != '\n'):
+				line = line.replace('\n', '')
 			line = line.replace('\t', ' ')
-			line = line.replace(',', '')
-			lineElem = line.split(' ')
+			lineElem = line.split(',')
 			for elem in lineElem:
-				numberelem += 1
 				if elem.isdigit():
+					numberelem += 1
+					numberRaw += 1
 					filegameboard.append(int(elem))
+				elif (elem == '#'):
+					break
+				elif (elem == ''):
+					break
 				else:
-					print('Error incorrect size of board')
+					print('\033[91mError incorrect size of board\033[0m')
 					exit()
-				numberRaw += 1
+
 		if (linePos != 0 and numberRaw != squareside):
-			print('Error incorrect size of board')
+			print('\033[91mError incorrect size of board\033[0m')
 			exit()
 		numberCol += 1
 		linePos += 1
 
 	if (numberCol -1!= squareside):
-		print('Error incorrect size of board'+str(numberCol))
+		print('\033[91mError incorrect size of board\033[0m'+str(numberCol))
 		exit()
 
-	test_squareroot_value = numberelem ** 0.5
-	decimal = str(test_squareroot_value - int(test_squareroot_value))[1:]
-	if decimal != '.0':
-		print('Error incorrect size of board')
-		exit()
+	# test_squareroot_value = numberelem ** 0.5
+	# decimal = str(test_squareroot_value - int(test_squareroot_value))[1:]
+	# if decimal != '.0':
+	# 	print('\033[91m 4Error incorrect size of board\033[0m')
+	# 	exit()
 	for i in range(numberelem):
 		if i not in filegameboard:
-			print('Error value doesn\'t exist')
+			print('\033[91mError value out of range\033[0m')
 			exit()
-	return filegameboard, int(test_squareroot_value)
+	return filegameboard, int(squareside)
 
 def graphical_interface_mode():
 	while 42:

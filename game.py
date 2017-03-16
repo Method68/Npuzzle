@@ -8,6 +8,7 @@ import replay
 from replay import ReplayMenu
 import image_slicer
 from core_solver import set_finalboard ,set_board
+import time
 
 def display_nbr_move(fenetre, total_move):
 	# initialize font; must be called after 'pygame.init()' to avoid 'Font not Initialized' error
@@ -59,7 +60,6 @@ def main_loop_solo(squareside, fenetre, blocks, fond):
 	move = []
 	gameboard = []
 	for elem in blocks:
-		print (elem.number)
 		gameboard.append(int(elem.number))
 	gameboard = set_board(gameboard, squareside)
 	print ("gameboard")
@@ -73,20 +73,30 @@ def main_loop_solo(squareside, fenetre, blocks, fond):
 		milliseconds += timer.tick_busy_loop(60)
 		for event in pygame.event.get():
 			if event.type == KEYDOWN:
+				move = []
+				print ("\n\nDEBUG")
+				print (event.key)
+				print (move)
+				print ("\n\n")
 				if event.key == 273:
 					move.append('UP')
+					movelen = 1
 				elif event.key == 274:
 					move.append('DOWN')
+					movelen = 1
 				elif event.key == 276:
 					move.append('LEFT')
+					movelen = 1
 				elif event.key == 275:
 					move.append('RIGHT')
+					movelen = 1
 				elif event.key == K_ESCAPE:
 					loop = 0 
-				movelen = 1
+					movelen = 1
 			elif event.type == QUIT:
 				loop = 0
-		if movelen == 1 and len(move) > 0:
+
+		if movelen == 1 and len(move) == 1:
 			blocks, gameboard = utils.player_move(move, 0, blocks, squareside, gameboard)
 			case = None
 
@@ -97,13 +107,13 @@ def main_loop_solo(squareside, fenetre, blocks, fond):
 					continue
 				case = (i, case)
 				break
-			if event.key == 273 and case[0] > 0:
+			if move[0] == 'UP' and case[0] > 0:
 				gameboard[case[0]][case[1]], gameboard[case[0]-1][case[1]] = gameboard[case[0]-1][case[1]], gameboard[case[0]][case[1]]
-			elif event.key == 274 and case[0] < (squareside - 1):
+			elif move[0] == 'DOWN' and case[0] < (squareside - 1):
 				gameboard[case[0]][case[1]], gameboard[case[0]+1][case[1]] = gameboard[case[0]+1][case[1]], gameboard[case[0]][case[1]]
-			elif event.key == 276 and case[1] > 0:
+			elif move[0] == 'LEFT' and case[1] > 0:
 				gameboard[case[0]][case[1]-1], gameboard[case[0]][case[1]] = gameboard[case[0]][case[1]], gameboard[case[0]][case[1]-1]
-			elif event.key == 275 and case[1] < (squareside - 1):
+			elif move[0] == 'RIGHT' and case[1] < (squareside - 1):
 				gameboard[case[0]][case[1]+1], gameboard[case[0]][case[1]] = gameboard[case[0]][case[1]], gameboard[case[0]][case[1]+1]
 			i = 0
 			fenetre.blit(fond, (0,0))
@@ -120,8 +130,9 @@ def main_loop_solo(squareside, fenetre, blocks, fond):
 			print ("block")
 			print (gameboard)
 			if (gameboard == final_board):
-				print ("win")
+				print ("\033[92mWIN\033[0m")
 				break
+		move = []
 		milliseconds, seconds, minutes = display_timer(fenetre, timer, milliseconds, seconds, minutes)
 	print ("Final score \n time {}:{}:{}\n total_move {}".format(minutes, seconds, milliseconds, total_move))
 
@@ -147,7 +158,6 @@ def main_loop(ia_final_move, squareside, fenetre, blocks, fond):
 					else:
 						auto = 1
 					space = 1
-		#use space to see the next step
 		if space == 1 and len_move > 0:
 			utils.ia_move(ia_final_move, index_move, blocks, squareside)
 			fenetre.blit(fond, (0,0))
@@ -160,11 +170,10 @@ def main_loop(ia_final_move, squareside, fenetre, blocks, fond):
 			pygame.draw.rect(fenetre, [238, 0, 0], (block0.x, block0.y, 100, 100), 1)
 			display_nbr_move(fenetre, total_move)
 			display_ia_mode(fenetre, auto)
-			# pygame.display.update()
 			pygame.display.flip()
 			index_move += 1
 			if index_move == len_move:
-				print ("\033[92mWIN")
+				print ("\033[92mWIN\033[0m")
 				break
 			if auto == 1:
 				space = 1
