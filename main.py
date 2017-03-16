@@ -160,8 +160,11 @@ def game_setting_menu(interface, input_board, squareside):
 			#####################
 			#Ce check est obligatoire sinon tu peux balance une string ....
 			if squareside.isdigit() == False or int(squareside) < 2:
-				print("\033[91mBad value select int > 1")
-				return
+				print("\033[91mBad value select int > 1\033[0m")
+				exit()
+			elif int(squareside) > 100:
+				print("\033[91mDo you really wanna wait forever ??\033[0m")
+				exit()
 			#####################
 			squareside = int(squareside)
 			print("\033[90m")
@@ -185,6 +188,11 @@ def main(argv):
 	fenetre = None
 	file_from_input = 0
 	if argv != None:
+		try:
+			fd = open(argv, 'r')
+		except FileNotFoundError:
+			print("\033[91mFile doesn't exist\033[0m")
+			exit()
 		filegameboard, squareside = file_read(open(argv, 'r'))
 		input_board = core_solver.set_board(filegameboard, squareside)
 		file_from_input = 1
@@ -195,7 +203,11 @@ def main(argv):
 		game_size = 2
 		while (game_size < 6):
 			size = game_size*100
-			img = Image.open("/Users/gkuma/Downloads/photo.jpg").resize((size,size))
+			try:
+				img = Image.open("/Users/gkuma/Downloads/photo.jpg").resize((size,size))
+			except FileNotFoundError:
+				print("\033[91mImage doesn't exist, Please drop an image named 'photo.jpg' there:\nPath:/Users/gkuma/Downloads/photo.jpg \033[0m")
+				exit()
 			out = open("/Users/gkuma/Downloads/photo_"+str(size)+"_"+".jpg", "w")
 			img.save(out, "JPEG")
 			game_size += 1
